@@ -52,10 +52,10 @@ router.get(
   asyncHandler(async (req, res) => {
     const limit = Math.min(Math.max(Number(req.query.limit || 50), 1), 200);
     const [rows] = await pool.query(
-      'SELECT version, content, created_at FROM app_versions ORDER BY id DESC LIMIT ?',
+      'SELECT version, content, download_url_windows, download_url_macos, created_at FROM app_versions ORDER BY id DESC LIMIT ?',
       [limit]
     );
-    res.json({ ok: true, data: rows });
+    res.json({ success: true, data: rows });
   })
 );
 
@@ -75,7 +75,7 @@ router.get(
     const q = schema.parse(req.query || {});
 
     // Public settings should NOT include sensitive values.
-    const allow = new Set(['framework_download_url', 'machine_pack_download_url', 'lottery_api_url']);
+    const allow = new Set(['framework_download_url', 'machine_pack_download_url', 'lottery_api_url', 'download_count']);
 
     const keys = (q.keys.length ? q.keys : Array.from(allow)).filter((k) => allow.has(k));
 
@@ -85,7 +85,7 @@ router.get(
       data[k] = await getSetting(k);
     }
 
-    res.json({ ok: true, data });
+    res.json({ success: true, data });
   })
 );
 

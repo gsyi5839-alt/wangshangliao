@@ -129,6 +129,22 @@ router.get(
 );
 
 /**
+ * Admin: list versions (latest first).
+ */
+router.get(
+  '/admin/versions',
+  adminAuth,
+  asyncHandler(async (req, res) => {
+    const limit = Math.min(Math.max(Number(req.query.limit || 50), 1), 200);
+    const [rows] = await pool.query(
+      'SELECT id, version, content, download_url_windows, download_url_macos, created_at FROM app_versions ORDER BY id DESC LIMIT ?',
+      [limit]
+    );
+    res.json({ ok: true, data: rows });
+  })
+);
+
+/**
  * Admin: create a version entry.
  */
 router.post(
@@ -137,12 +153,65 @@ router.post(
   asyncHandler(async (req, res) => {
     const schema = z.object({
       version: z.string().min(1).max(32),
-      content: z.string().min(1)
+      content: z.string().min(1),
+      downloadUrlWindows: z.string().url().optional().nullable(),
+      downloadUrlMacos: z.string().url().optional().nullable()
     });
     const body = schema.parse(req.body);
 
-    await pool.query('INSERT INTO app_versions (version, content) VALUES (?, ?)', [body.version, body.content]);
-    res.json({ ok: true });
+    await pool.query(
+      'INSERT INTO app_versions (version, content, download_url_windows, download_url_macos) VALUES (?, ?, ?, ?)',
+      [body.version, body.content, body.downloadUrlWindows || null, body.downloadUrlMacos || null]
+    );
+    const [[row]] = await pool.query('SELECT * FROM app_versions ORDER BY id DESC LIMIT 1');
+    res.json({ ok: true, data: row });
+  })
+);
+
+/**
+ * Admin: update a version entry.
+ */
+router.put(
+  '/admin/versions/:id',
+  adminAuth,
+  asyncHandler(async (req, res) => {
+    const id = Number(req.params.id);
+    if (!id || id < 1) throw new HttpError(400, 'Invalid version id');
+
+    const schema = z.object({
+      version: z.string().min(1).max(32).optional(),
+      content: z.string().min(1).optional(),
+      downloadUrlWindows: z.string().url().optional().nullable(),
+      downloadUrlMacos: z.string().url().optional().nullable()
+    });
+    const body = schema.parse(req.body);
+
+    const updates = [];
+    const params = [];
+
+    if (body.version !== undefined) {
+      updates.push('version = ?');
+      params.push(body.version);
+    }
+    if (body.content !== undefined) {
+      updates.push('content = ?');
+      params.push(body.content);
+    }
+    if (body.downloadUrlWindows !== undefined) {
+      updates.push('download_url_windows = ?');
+      params.push(body.downloadUrlWindows);
+    }
+    if (body.downloadUrlMacos !== undefined) {
+      updates.push('download_url_macos = ?');
+      params.push(body.downloadUrlMacos);
+    }
+
+    if (updates.length === 0) throw new HttpError(400, 'No fields to update');
+
+    params.push(id);
+    await pool.query(`UPDATE app_versions SET ${updates.join(', ')} WHERE id = ?`, params);
+    const [[row]] = await pool.query('SELECT * FROM app_versions WHERE id = ?', [id]);
+    res.json({ ok: true, data: row });
   })
 );
 
@@ -164,7 +233,8 @@ router.post(
       'framework_download_url',
       'machine_pack_download_url',
       'lottery_api_url',
-      'lottery_api_token'
+      'lottery_api_token',
+      'download_count'
     ]);
     if (!allow.has(body.key)) throw new HttpError(400, 'Unsupported setting key');
 
@@ -186,7 +256,8 @@ router.get(
       'framework_download_url',
       'machine_pack_download_url',
       'lottery_api_url',
-      'lottery_api_token'
+      'lottery_api_token',
+      'download_count'
     ];
     const data = {};
     for (const k of keys) {

@@ -17,11 +17,17 @@
             <el-form-item label="版本号">
               <el-input v-model="form.version" placeholder="例如 4.29" />
             </el-form-item>
+            <el-form-item label="Windows 下载链接">
+              <el-input v-model="form.downloadUrlWindows" placeholder="https://example.com/app-windows.exe" />
+            </el-form-item>
+            <el-form-item label="macOS 下载链接">
+              <el-input v-model="form.downloadUrlMacos" placeholder="https://example.com/app-macos.dmg" />
+            </el-form-item>
             <el-form-item label="更新内容">
               <el-input
                 v-model="form.content"
                 type="textarea"
-                :rows="10"
+                :rows="6"
                 placeholder="描述本次更新的内容...&#10;- 新增：xxx功能&#10;- 修复：xxx问题&#10;- 优化：xxx体验"
                 resize="none"
               />
@@ -73,6 +79,16 @@
                   <span v-if="index === 0" class="latest-tag">最新</span>
                 </div>
                 <div class="version-content">{{ item.content }}</div>
+                <div class="download-links" v-if="item.download_url_windows || item.download_url_macos">
+                  <a v-if="item.download_url_windows" :href="item.download_url_windows" target="_blank" class="download-link windows">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+                    Windows
+                  </a>
+                  <a v-if="item.download_url_macos" :href="item.download_url_macos" target="_blank" class="download-link macos">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>
+                    macOS
+                  </a>
+                </div>
               </div>
             </div>
             <div v-if="rows.length === 0 && !loadingList" class="empty-state">
@@ -101,13 +117,17 @@ import { http } from '../utils/http'
 type Row = {
   version: string
   content: string
+  download_url_windows?: string
+  download_url_macos?: string
   created_at: string
 }
 
 // Form state
 const form = reactive({
   version: '',
-  content: ''
+  content: '',
+  downloadUrlWindows: '',
+  downloadUrlMacos: ''
 })
 const loadingAdd = ref(false)
 
@@ -127,7 +147,9 @@ async function add() {
   try {
     await http.post('/admin/versions', {
       version: form.version.trim(),
-      content: form.content.trim()
+      content: form.content.trim(),
+      downloadUrlWindows: form.downloadUrlWindows.trim() || null,
+      downloadUrlMacos: form.downloadUrlMacos.trim() || null
     })
     ElMessage.success('版本发布成功')
     clearForm()
@@ -143,7 +165,7 @@ async function add() {
 async function load() {
   loadingList.value = true
   try {
-    rows.value = await http.get<Row[]>('/client/versions?limit=50')
+    rows.value = await http.get<Row[]>('/admin/versions?limit=50')
   } finally {
     loadingList.value = false
   }
@@ -155,6 +177,8 @@ async function load() {
 function clearForm() {
   form.version = ''
   form.content = ''
+  form.downloadUrlWindows = ''
+  form.downloadUrlMacos = ''
 }
 
 /**
@@ -360,6 +384,38 @@ onMounted(load)
   padding: 16px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
+}
+
+/* Download Links */
+.download-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.download-link:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.download-link svg {
+  width: 14px;
+  height: 14px;
 }
 
 /* Empty State */
