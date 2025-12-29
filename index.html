@@ -854,9 +854,13 @@
                 if (data.success && data.data && data.data.length > 0) {
                     const latestVersion = data.data[0];
                     
-                    // Update version numbers
-                    document.getElementById('windows-version').textContent = latestVersion.version || 'v1.0.0';
-                    document.getElementById('macos-version').textContent = latestVersion.version || 'v1.0.0';
+                    // Update version numbers and remove loading class
+                    const winVer = document.getElementById('windows-version');
+                    const macVer = document.getElementById('macos-version');
+                    winVer.textContent = latestVersion.version ? 'v' + latestVersion.version : 'v1.0.0';
+                    macVer.textContent = latestVersion.version ? 'v' + latestVersion.version : 'v1.0.0';
+                    winVer.classList.remove('loading-version');
+                    macVer.classList.remove('loading-version');
                     
                     // Update time
                     if (latestVersion.created_at) {
@@ -884,8 +888,12 @@
         }
 
         function setDefaultVersionInfo() {
-            document.getElementById('windows-version').textContent = 'v1.0.0';
-            document.getElementById('macos-version').textContent = 'v1.0.0';
+            const winVer = document.getElementById('windows-version');
+            const macVer = document.getElementById('macos-version');
+            winVer.textContent = 'v1.0.0';
+            macVer.textContent = 'v1.0.0';
+            winVer.classList.remove('loading-version');
+            macVer.classList.remove('loading-version');
             document.getElementById('update-time').textContent = '--';
             window.downloadUrls = { windows: '#', macos: '#' };
         }
