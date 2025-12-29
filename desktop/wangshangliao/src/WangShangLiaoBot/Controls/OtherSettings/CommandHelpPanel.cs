@@ -1,0 +1,102 @@
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace WangShangLiaoBot.Controls.OtherSettings
+{
+    /// <summary>
+    /// 命令说明 - 显示面板
+    /// </summary>
+    public sealed class CommandHelpPanel : UserControl
+    {
+        private TextBox txtCommandHelp;
+
+        public CommandHelpPanel()
+        {
+            BackColor = SystemColors.Control;
+            Font = new Font("Microsoft YaHei UI", 9F);
+            Dock = DockStyle.Fill;
+
+            InitializeUI();
+            LoadContent();
+        }
+
+        private void InitializeUI()
+        {
+            SuspendLayout();
+
+            // Command help text box (read-only, multiline)
+            txtCommandHelp = new TextBox
+            {
+                Location = new Point(10, 10),
+                Size = new Size(580, 300),
+                Multiline = true,
+                ReadOnly = true,
+                ScrollBars = ScrollBars.Vertical,
+                BackColor = SystemColors.Window,
+                BorderStyle = BorderStyle.FixedSingle,
+                Font = new Font("Microsoft YaHei UI", 9F)
+            };
+            Controls.Add(txtCommandHelp);
+
+            // Handle resize to fill available space
+            Resize += (s, e) =>
+            {
+                txtCommandHelp.Size = new Size(Width - 20, Height - 20);
+            };
+
+            ResumeLayout(false);
+        }
+
+        private void LoadContent()
+        {
+            // Command help content
+            txtCommandHelp.Text = @"开始程序/开始游戏/开机
+停止程序/停止游戏/关机
+
+今天[类型]=旺旺号
+昨天[类型]=旺旺号
+2020-02-17至2020-02-18[类型]=旺旺号
+2020-02-17-8-30至2020-02-18-12-30[类型]=旺旺号(自定义时、分)
+[类型]可为：下注、上下分、艾特分、统计、百分比，或者不填=全部显示
+如：今天百分比=旺旺号
+
+今天数据=旺旺号
+昨天数据=旺旺号
+2020-02-17数据=旺旺号
+回水工具-统计查询右边列表
+
+今天期盈利、昨天期盈利、2020-02-17期盈利
+今天盈利、昨天盈利、2020-02-17盈利
+加黑名单旺旺号、减黑名单旺旺号
+改名旺旺号=新名片、旺旺号改名=新名片
+旺旺号+-=分数理由，如123456+100红包，可多行，但理由需要相同
+查询邀请旺旺号、查询被邀请旺旺号
+
+换机器人，如：私聊框架机器人 换机器人 ，即可把当前机器人设置机器人
+
+开启私聊命令处理上下分后，需管理员与机器人是好友可用
+查看上分|查看下分(不支持命令+数字)
+到的|没到|全到|忽略查钱
+回钱|拒绝|全回|忽略回钱
+支持命令+数字
+如到的2，处理第2条，全到5，处理前5条
+直接发命令，如到的，处理第1条
+
+
+********************************************
+
+直接艾特，等于这个人在群里发1
+
+艾特分数到、艾特分数查
+如：@旺旺1000到、@旺旺1000查
+
+@旺旺+分数，如@123456+100，不需要理由，记录到艾特上下分
+与私聊123456+100理由差不多
+
+@旺旺改名=新名片、改名@旺旺=新名片
+@旺旺加黑名单、@旺旺减黑名单
+@旺旺踢
+@旺旺解禁 @旺旺禁言";
+        }
+    }
+}

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WangShangLiaoBot</RootNamespace>
+    <AssemblyName>旺商聊机器人</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Forms\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ScoreForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ScoreForm.Designer.cs">
+      <DependentUpon>ScoreForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AccountListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BillExportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PrivateShillForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Settings\BillSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Settings\BillSettingsForm.Designer.cs">
+      <DependentUpon>BillSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SealSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Services\AccountService.cs" />
+    <Compile Include="Services\ChatService.cs" />
+    <Compile Include="Services\AutoReplyService.cs" />
+    <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\RunLogService.cs" />
+    <Compile Include="Services\LotteryService.cs" />
+    <Compile Include="Services\HttpJsonClient.cs" />
+    <Compile Include="Services\ClientPortalService.cs" />
+    <Compile Include="Services\TemplateEngine.cs" />
+    <Compile Include="Services\TemplateEngine.Format.cs" />
+    <Compile Include="Services\TemplateEngine.Betting.cs" />
+    <Compile Include="Services\Betting\OddsConfigService.cs" />
+    <Compile Include="Services\Betting\BetMessageParser.cs" />
+    <Compile Include="Services\Betting\BetLedgerService.cs" />
+    <Compile Include="Services\Betting\BetSettlementService.cs" />
+    <Compile Include="Services\Spam\SpamSettingsService.cs" />
+    <Compile Include="Services\Spam\SpamDetectionService.cs" />
+    <Compile Include="Services\CardSettingsService.cs" />
+    <Compile Include="Services\TrusteeService.cs" />
+    <Compile Include="Services\BonusActivityService.cs" />
+    <Compile Include="Services\ShillService.cs" />
+    <Compile Include="Services\PrivateShillService.cs" />
+    <Compile Include="Services\AtReasonService.cs" />
+    <Compile Include="Services\SensitiveOperationService.cs" />
+    <Compile Include="Services\SettlementTimeService.cs" />
+    <Compile Include="Services\LotteryDelayService.cs" />
+    <Compile Include="Services\AdminCommandReplaceService.cs" />
+    <Compile Include="Services\SendMessageReplaceService.cs" />
+    <Compile Include="Models\AppConfig.cs" />
+    <Compile Include="Models\BotAccount.cs" />
+    <Compile Include="Models\ChatMessage.cs" />
+    <Compile Include="Models\RunLogEntry.cs" />
+    <Compile Include="Models\Betting\BetModels.cs" />
+    <Compile Include="Models\Betting\ClassicOddsConfig.cs" />
+    <Compile Include="Models\Spam\SpamKeywordRule.cs" />
+    <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\TrusteeItem.cs" />
+    <Compile Include="Utils\Logger.cs" />
+    <Compile Include="Utils\MessageDecoder.cs" />
+    <Compile Include="Controls\BillSendSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BillSendSettingsControl.Designer.cs">
+      <DependentUpon>BillSendSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BillFormatSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BillFormatSettingsControl.Designer.cs">
+      <DependentUpon>BillFormatSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GroupTaskSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\GroupTaskSettingsControl.Designer.cs">
+      <DependentUpon>GroupTaskSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BillReplaceCommandControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BillReplaceCommandControl.Designer.cs">
+      <DependentUpon>BillReplaceCommandControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BasicSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BasicSettingsControl.Designer.cs">
+      <DependentUpon>BasicSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MuteSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MuteSettingsControl.Designer.cs">
+      <DependentUpon>MuteSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FeedbackSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FeedbackSettingsControl.Designer.cs">
+      <DependentUpon>FeedbackSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AutoReplySettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AutoReplySettingsControl.Designer.cs">
+      <DependentUpon>AutoReplySettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BlacklistSpamSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CardSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TrusteeSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BonusActivitySettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ShillSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RunLogControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SystemSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\AtReasonPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\SensitiveOperationPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\SettlementTimePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\LotteryDelayPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\AdminCommandReplacePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\SendMessageReplacePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\CommandHelpPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\FaqPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\Faq\NoPrivateChatPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OtherSettings\Faq\NoAtButShowNickPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AutoReply\InternalReplySettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AutoReply\InternalReplySettingsControl.Designer.cs">
+      <DependentUpon>InternalReplySettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AutoReply\VariableHelpControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AutoReply\VariableHelpControl.Designer.cs">
+      <DependentUpon>VariableHelpControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OddsSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OddsSettingsControl.Designer.cs">
+      <DependentUpon>OddsSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Odds\ClassicPlaySettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Odds\ClassicPlaySettingsControl.Designer.cs">
+      <DependentUpon>ClassicPlaySettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Odds\TailBallSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Odds\TailBallSettingsControl.Designer.cs">
+      <DependentUpon>TailBallSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Odds\DragonTigerSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Odds\DragonTigerSettingsControl.Designer.cs">
+      <DependentUpon>DragonTigerSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Odds\ThreeArmySettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Odds\ThreeArmySettingsControl.Designer.cs">
+      <DependentUpon>ThreeArmySettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Odds\PositionBallSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Odds\PositionBallSettingsControl.Designer.cs">
+      <DependentUpon>PositionBallSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Odds\OtherPlaySettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Odds\OtherPlaySettingsControl.Designer.cs">
+      <DependentUpon>OtherPlaySettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BetProcess\BetBasicSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BetProcess\BetBasicSettingsControl.Designer.cs">
+      <DependentUpon>BetBasicSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BetProcess\BetAttackRangeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BetProcess\BetAttackRangeControl.Designer.cs">
+      <DependentUpon>BetAttackRangeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SealSettings\SealMessagePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SealSettings\SealTabPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SealSettings\SealSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SealSettings\SealTabPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\RebateToolControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <EmbeddedResource Include="Forms\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="Resources\app.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\app.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
+

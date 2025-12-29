@@ -1,0 +1,426 @@
+/**
+ * Custom Theme for Admin Management System
+ * Dark theme with green accents - no blue/purple/yellow
+ * Font: Outfit (modern geometric sans-serif)
+ */
+
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Primary Colors */
+  --primary: #20a53a;
+  --primary-light: #2ecc52;
+  --primary-dark: #178a2c;
+  --primary-glow: rgba(32, 165, 58, 0.3);
+  
+  /* Background Colors (Dark Theme) */
+  --bg-darkest: #0a0a0a;
+  --bg-dark: #111111;
+  --bg-card: #161616;
+  --bg-elevated: #1c1c1c;
+  --bg-input: #222222;
+  --bg-hover: #2a2a2a;
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #6b6b6b;
+  --text-disabled: #444444;
+  
+  /* Border Colors */
+  --border-subtle: #2a2a2a;
+  --border-default: #333333;
+  --border-focus: #20a53a;
+  
+  /* Status Colors (no blue/purple/yellow) */
+  --success: #20a53a;
+  --danger: #e53935;
+  --warning: #ff7043;
+  --info: #26a69a;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px var(--primary-glow);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  
+  /* Element Plus Overrides */
+  --el-color-primary: var(--primary);
+  --el-color-primary-light-3: var(--primary-light);
+  --el-color-primary-light-5: rgba(32, 165, 58, 0.5);
+  --el-color-primary-light-7: rgba(32, 165, 58, 0.3);
+  --el-color-primary-light-8: rgba(32, 165, 58, 0.2);
+  --el-color-primary-light-9: rgba(32, 165, 58, 0.1);
+  --el-color-primary-dark-2: var(--primary-dark);
+  --el-color-success: var(--success);
+  --el-color-danger: var(--danger);
+  --el-color-warning: var(--warning);
+  --el-color-info: var(--info);
+  
+  --el-bg-color: var(--bg-card);
+  --el-bg-color-page: var(--bg-dark);
+  --el-bg-color-overlay: var(--bg-elevated);
+  
+  --el-text-color-primary: var(--text-primary);
+  --el-text-color-regular: var(--text-secondary);
+  --el-text-color-secondary: var(--text-muted);
+  --el-text-color-placeholder: var(--text-disabled);
+  --el-text-color-disabled: var(--text-disabled);
+  
+  --el-border-color: var(--border-default);
+  --el-border-color-light: var(--border-subtle);
+  --el-border-color-lighter: var(--border-subtle);
+  --el-border-color-extra-light: var(--border-subtle);
+  
+  --el-fill-color: var(--bg-input);
+  --el-fill-color-light: var(--bg-hover);
+  --el-fill-color-lighter: var(--bg-elevated);
+  --el-fill-color-extra-light: var(--bg-card);
+  --el-fill-color-blank: var(--bg-card);
+  
+  --el-mask-color: rgba(0, 0, 0, 0.7);
+  --el-border-radius-base: var(--radius-sm);
+  --el-border-radius-small: 4px;
+  --el-border-radius-round: 20px;
+  --el-font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+/* Global Reset & Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--bg-darkest);
+  color: var(--text-primary);
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Element Plus Component Overrides */
+
+/* Buttons */
+.el-button {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.el-button--primary,
+.el-button--success {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.el-button--primary:hover,
+.el-button--success:hover {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 16px var(--primary-glow);
+  transform: translateY(-1px);
+}
+
+.el-button--primary:active,
+.el-button--success:active {
+  transform: translateY(0);
+}
+
+.el-button--danger {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.el-button.is-plain {
+  background: transparent;
+}
+
+.el-button--success.is-plain {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: transparent;
+}
+
+.el-button--success.is-plain:hover {
+  color: var(--text-primary);
+  background: var(--primary);
+}
+
+.el-button--default {
+  background: var(--bg-input);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+.el-button--default:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-focus);
+  color: var(--text-primary);
+}
+
+/* Cards */
+.el-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.el-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.el-card__header {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 16px 20px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.el-card__body {
+  padding: 20px;
+}
+
+.el-card.is-never-shadow {
+  box-shadow: none;
+}
+
+/* Inputs */
+.el-input__wrapper {
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 1px var(--border-default) inset;
+  transition: all var(--transition-fast);
+}
+
+.el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--text-muted) inset;
+}
+
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 2px var(--primary) inset;
+}
+
+.el-input__inner {
+  color: var(--text-primary);
+}
+
+.el-input__inner::placeholder {
+  color: var(--text-disabled);
+}
+
+.el-textarea__inner {
+  background: var(--bg-input);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+}
+
+.el-textarea__inner:focus {
+  border-color: var(--primary);
+}
+
+/* Select */
+.el-select__wrapper {
+  background: var(--bg-input);
+  box-shadow: 0 0 0 1px var(--border-default) inset;
+}
+
+.el-select__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--text-muted) inset;
+}
+
+.el-select__wrapper.is-focused {
+  box-shadow: 0 0 0 2px var(--primary) inset;
+}
+
+.el-select-dropdown {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+}
+
+.el-select-dropdown__item {
+  color: var(--text-secondary);
+}
+
+.el-select-dropdown__item:hover {
+  background: var(--bg-hover);
+}
+
+.el-select-dropdown__item.is-selected {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Input Number */
+.el-input-number {
+  background: var(--bg-input);
+}
+
+.el-input-number .el-input__wrapper {
+  background: var(--bg-input);
+}
+
+/* Switch */
+.el-switch.is-checked .el-switch__core {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Tables */
+.el-table {
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-header-bg-color: var(--bg-elevated);
+  --el-table-row-hover-bg-color: var(--bg-hover);
+  --el-table-border-color: var(--border-subtle);
+  background: transparent;
+  font-size: 13px;
+}
+
+.el-table th.el-table__cell {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.el-table td.el-table__cell {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.el-table__empty-text {
+  color: var(--text-muted);
+}
+
+/* Menu (Sidebar) */
+.el-menu {
+  background: transparent;
+  border: none;
+}
+
+.el-menu-item {
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  margin: 4px 8px;
+  transition: all var(--transition-fast);
+}
+
+.el-menu-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.el-menu-item.is-active {
+  background: var(--primary);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Form */
+.el-form-item__label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Alert */
+.el-alert--success {
+  background: rgba(32, 165, 58, 0.15);
+  border: 1px solid var(--primary);
+}
+
+.el-alert--success .el-alert__title {
+  color: var(--primary-light);
+}
+
+/* Popconfirm */
+.el-popconfirm {
+  background: var(--bg-elevated);
+}
+
+/* Message */
+.el-message {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+}
+
+/* Container Layout */
+.el-container {
+  background: var(--bg-darkest);
+}
+
+.el-header {
+  background: var(--bg-card);
+}
+
+.el-aside {
+  background: var(--bg-card);
+}
+
+.el-main {
+  background: var(--bg-dark);
+}
+
+/* Loading */
+.el-loading-mask {
+  background: rgba(10, 10, 10, 0.8);
+}
+
+.el-loading-spinner .path {
+  stroke: var(--primary);
+}
+
+/* Divider */
+.el-divider {
+  border-color: var(--border-subtle);
+}
+
+/* Popover */
+.el-popover.el-popper {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+}
+
+/* Row and Col */
+.el-row {
+  margin-bottom: 0;
+}
