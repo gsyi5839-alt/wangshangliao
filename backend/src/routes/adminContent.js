@@ -65,6 +65,7 @@ router.post(
 
 /**
  * Admin: list recharge cards (latest first).
+ * Returns: card_code, days, used_by, used_at, created_at, expire_at (user's expiration if used)
  */
 router.get(
   '/admin/recharge-cards',
@@ -72,7 +73,8 @@ router.get(
   asyncHandler(async (req, res) => {
     const limit = Math.min(Math.max(Number(req.query.limit || 200), 1), 1000);
     const [rows] = await pool.query(
-      `SELECT c.id, c.card_code, c.days, c.used_at, u.username AS used_by
+      `SELECT c.id, c.card_code, c.days, c.used_at, c.created_at,
+              u.username AS used_by, u.expire_at AS user_expire_at
        FROM recharge_cards c
        LEFT JOIN users u ON u.id = c.used_by_user_id
        ORDER BY c.id DESC

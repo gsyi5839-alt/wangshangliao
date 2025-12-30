@@ -9,6 +9,7 @@ import VersionsView from '../views/VersionsView.vue'
 import SettingsView from '../views/SettingsView.vue'
 import AgentsView from '../views/AgentsView.vue'
 import UsersView from '../views/UsersView.vue'
+import LotteryApiView from '../views/LotteryApiView.vue'
 
 export const router = createRouter({
   history: createWebHashHistory('/admin/'),
@@ -20,6 +21,7 @@ export const router = createRouter({
       children: [
         { path: '', redirect: '/cards' },
         { path: 'cards', component: CardsView },
+        { path: 'lottery-api', component: LotteryApiView },
         { path: 'announcements', component: AnnouncementsView },
         { path: 'versions', component: VersionsView },
         { path: 'settings', component: SettingsView },

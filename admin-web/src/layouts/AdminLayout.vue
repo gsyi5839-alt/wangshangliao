@@ -34,6 +34,14 @@
             </svg>
             <span class="nav-text">充值卡</span>
           </router-link>
+          <router-link to="/lottery-api" class="nav-item" :class="{ active: isActive('/lottery-api') }" :title="isCollapsed ? '彩票接口' : ''">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="nav-text">彩票接口</span>
+          </router-link>
           <router-link to="/announcements" class="nav-item" :class="{ active: isActive('/announcements') }" :title="isCollapsed ? '公告' : ''">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -172,6 +180,7 @@ function isActive(path: string): boolean {
 const pageTitle = computed(() => {
   const titles: Record<string, string> = {
     '/cards': '充值卡管理',
+    '/lottery-api': '彩票接口管理',
     '/announcements': '公告管理',
     '/versions': '版本更新日志',
     '/settings': '桌面端配置',

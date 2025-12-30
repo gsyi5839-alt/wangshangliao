@@ -135,25 +135,39 @@
         </div>
         <div class="panel-body">
           <el-table :data="cards" max-height="520" v-loading="loadingList" class="cards-table">
-            <el-table-column prop="card_code" label="卡号" min-width="240">
+            <el-table-column prop="card_code" label="卡号" min-width="200">
               <template #default="{ row }">
                 <code class="card-code">{{ row.card_code }}</code>
               </template>
             </el-table-column>
-            <el-table-column prop="days" label="天数" width="80" align="center">
+            <el-table-column prop="days" label="天数" width="70" align="center">
               <template #default="{ row }">
                 <span class="days-badge">{{ row.days }}天</span>
               </template>
             </el-table-column>
-            <el-table-column prop="used_by" label="使用者" width="140">
+            <el-table-column prop="created_at" label="创建时间" width="140">
+              <template #default="{ row }">
+                <span v-if="row.created_at" class="time-text">{{ formatTime(row.created_at) }}</span>
+                <span v-else class="time-placeholder">-</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="used_by" label="使用者" width="120">
               <template #default="{ row }">
                 <span v-if="row.used_by" class="user-tag">{{ row.used_by }}</span>
                 <span v-else class="unused-tag">未使用</span>
               </template>
             </el-table-column>
-            <el-table-column prop="used_at" label="使用时间" width="180">
+            <el-table-column prop="used_at" label="激活时间" width="140">
               <template #default="{ row }">
                 <span v-if="row.used_at" class="time-text">{{ formatTime(row.used_at) }}</span>
+                <span v-else class="time-placeholder">-</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="user_expire_at" label="到期时间" width="140">
+              <template #default="{ row }">
+                <div v-if="row.user_expire_at" :class="['expire-badge', isExpired(row.user_expire_at) ? 'expired' : 'active']">
+                  <span>{{ formatDate(row.user_expire_at) }}</span>
+                </div>
                 <span v-else class="time-placeholder">-</span>
               </template>
             </el-table-column>
@@ -179,6 +193,8 @@ type CardRow = {
   days: number
   used_by: string | null
   used_at: string | null
+  created_at: string | null
+  user_expire_at: string | null
 }
 
 type GeneratedCard = {
@@ -251,6 +267,25 @@ function formatTime(dateStr: string): string {
     hour: '2-digit',
     minute: '2-digit'
   })
+}
+
+/**
+ * Format date string (only date, no time)
+ */
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+}
+
+/**
+ * Check if date is expired
+ */
+function isExpired(dateStr: string): boolean {
+  return new Date(dateStr) < new Date()
 }
 
 onMounted(loadCards)
@@ -514,5 +549,25 @@ onMounted(loadCards)
 
 .time-placeholder {
   color: var(--text-disabled);
+}
+
+/* Expire Badge */
+.expire-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.expire-badge.active {
+  background: rgba(32, 165, 58, 0.15);
+  color: var(--primary);
+}
+
+.expire-badge.expired {
+  background: rgba(229, 57, 53, 0.15);
+  color: var(--danger);
 }
 </style>

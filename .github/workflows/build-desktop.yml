@@ -1,0 +1,132 @@
+# GitHub Actions workflow to build Windows desktop application
+# Triggers on version tags (v*) or manual dispatch
+# Builds the WangShangLiaoBot WinForms application and uploads to server
+
+name: Build Desktop App
+
+on:
+  # Trigger on version tags
+  push:
+    tags:
+      - 'v*'
+  
+  # Allow manual trigger from GitHub Actions tab
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+env:
+  SOLUTION_PATH: desktop/wangshangliao/WangShangLiaoBot.sln
+  BUILD_CONFIGURATION: Release
+  OUTPUT_DIR: desktop/wangshangliao/src/WangShangLiaoBot/bin/Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    # Checkout code
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    # Setup MSBuild
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+    
+    # Setup NuGet
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1
+    
+    # Restore NuGet packages
+    - name: Restore NuGet packages
+      run: nuget restore ${{ env.SOLUTION_PATH }}
+    
+    # Build solution
+    - name: Build solution
+      run: msbuild ${{ env.SOLUTION_PATH }} /t:Rebuild /p:Configuration=${{ env.BUILD_CONFIGURATION }} /v:minimal
+    
+    # Get version from tag or input
+    - name: Get version
+      id: version
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          # Extract version from tag (remove 'v' prefix)
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        fi
+    
+    # Package application
+    - name: Package application
+      shell: pwsh
+      run: |
+        $version = "${{ steps.version.outputs.VERSION }}"
+        $zipName = "WangShangLiaoBot_v${version}_Windows.zip"
+        
+        # Create package directory
+        New-Item -ItemType Directory -Force -Path "package"
+        
+        # Copy Release files to package
+        Copy-Item -Path "${{ env.OUTPUT_DIR }}/*" -Destination "package/" -Recurse
+        
+        # Create ZIP archive
+        Compress-Archive -Path "package/*" -DestinationPath $zipName -Force
+        
+        Write-Host "Created package: $zipName"
+        
+        # Save zip name for next steps
+        echo "ZIP_NAME=$zipName" >> $env:GITHUB_OUTPUT
+      id: package
+    
+    # Upload artifact to GitHub
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: WangShangLiaoBot-Windows-${{ steps.version.outputs.VERSION }}
+        path: ${{ steps.package.outputs.ZIP_NAME }}
+        retention-days: 30
+    
+    # Create GitHub Release (only for tags)
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ steps.package.outputs.ZIP_NAME }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    # Upload to server via SCP (optional - requires SSH secrets)
+    - name: Upload to server
+      if: ${{ vars.ENABLE_SERVER_UPLOAD == 'true' }}
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        source: ${{ steps.package.outputs.ZIP_NAME }}
+        target: /www/wwwroot/bocail.com/downloads/
+
+  # Notify completion (optional)
+  notify:
+    needs: build
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Build status
+      run: |
+        if [ "${{ needs.build.result }}" == "success" ]; then
+          echo "✅ Build completed successfully!"
+        else
+          echo "❌ Build failed!"
+          exit 1
+        fi
+

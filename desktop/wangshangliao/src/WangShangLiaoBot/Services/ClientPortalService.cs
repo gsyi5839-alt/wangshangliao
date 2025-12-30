@@ -83,6 +83,33 @@ namespace WangShangLiaoBot.Services
             return await client.GetDataAsync<Dictionary<string, string>>("client/settings-private", clientToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Get enabled lottery API configurations from server
+        /// </summary>
+        public async Task<List<LotteryApiConfig>> GetLotteryApisAsync()
+        {
+            var client = CreateClient();
+            return await client.GetDataAsync<List<LotteryApiConfig>>("client/lottery-apis").ConfigureAwait(false);
+        }
+
+    }
+
+    /// <summary>
+    /// Lottery API configuration from server
+    /// </summary>
+    internal sealed class LotteryApiConfig
+    {
+        public long id { get; set; }
+        public string name { get; set; }
+        public string code { get; set; }
+        public string token { get; set; }
+        public string api_url { get; set; }
+        public string backup_url { get; set; }
+        public string format_type { get; set; }
+        public string callback_name { get; set; }
+        public int rows_count { get; set; }
+        public int request_interval { get; set; }
+        public int max_requests_per_30s { get; set; }
     }
 
     internal sealed class ClientLoginResult

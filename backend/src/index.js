@@ -17,6 +17,7 @@ const { router: clientAuthRouter } = require('./routes/clientAuth');
 const { router: clientContentRouter } = require('./routes/clientContent');
 const { router: adminContentRouter } = require('./routes/adminContent');
 const { router: usersRouter } = require('./routes/users');
+const { router: lotteryApiRouter } = require('./routes/lotteryApi');
 const { ensureBootstrapAdmin } = require('./services/seedAdmin');
 
 async function main() {
@@ -47,6 +48,7 @@ async function main() {
   app.use('/api', clientContentRouter);
   app.use('/api', adminContentRouter);
   app.use('/api', usersRouter);
+  app.use('/api', lotteryApiRouter);
 
   // Error handler (must be last).
   app.use(errorHandler);
