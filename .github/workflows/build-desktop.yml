@@ -18,6 +18,11 @@ on:
         required: true
         default: '1.0.0'
 
+# Grant write permissions for creating releases
+permissions:
+  contents: write
+  actions: read
+
 env:
   SOLUTION_PATH: desktop/wangshangliao/WangShangLiaoBot.sln
   BUILD_CONFIGURATION: Release
