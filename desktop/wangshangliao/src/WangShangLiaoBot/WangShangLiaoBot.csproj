@@ -133,6 +133,7 @@
     <Compile Include="Models\TrusteeItem.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\MessageDecoder.cs" />
+    <Compile Include="Utils\ImeGuard.cs" />
     <Compile Include="Controls\BillSendSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -314,6 +315,45 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\RebateTool\RebateToolControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\StatisticsAllPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\RebateCalcPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\RebateSettingsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\SingleQueryPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\NightSnackCalcPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\NightSnackSettingsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\UpDownRecordPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\AtScoreRecordPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\PerPeriodProfitPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\BankerProfitPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\InvitationRecordPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\RecordDeletePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\RebateTool\AutoRebatePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <EmbeddedResource Include="Forms\LoginForm.resx">

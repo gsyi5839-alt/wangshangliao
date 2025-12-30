@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using WangShangLiaoBot.Services;
+using WangShangLiaoBot.Utils;
 
 namespace WangShangLiaoBot.Forms
 {
@@ -14,6 +15,26 @@ namespace WangShangLiaoBot.Forms
         {
             InitializeComponent();
             LoadSavedCredentials();
+
+            // Fix register/recharge/change-password input issues:
+            // - Blue underline line above textbox (IME composition UI)
+            // - First character not visible until typing more
+            // - Password textbox sometimes not showing input
+            // Root cause: IME composition context attached to edit control.
+            // Solution: detach IME context + switch to English input on focus (best effort).
+            ImeGuard.DisableIme(txtUsername);
+            ImeGuard.DisableIme(txtPassword);
+            ImeGuard.DisableIme(txtRegUsername);
+            ImeGuard.DisableIme(txtRegPassword);
+            ImeGuard.DisableIme(txtRegSuperPassword);
+            ImeGuard.DisableIme(txtRegCard);
+            ImeGuard.DisableIme(txtRegBindInfo);
+            ImeGuard.DisableIme(txtRegPromoter);
+            ImeGuard.DisableIme(txtRechargeUsername);
+            ImeGuard.DisableIme(txtRechargeCard);
+            ImeGuard.DisableIme(txtChangePwdUsername);
+            ImeGuard.DisableIme(txtChangePwdSuperPassword);
+            ImeGuard.DisableIme(txtChangePwdNewPassword);
         }
         
         /// <summary>
@@ -162,22 +183,24 @@ namespace WangShangLiaoBot.Forms
             
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                ShowError("请填写完整信息");
+                MessageBox.Show("请填写账号与密码", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrEmpty(superPassword) || string.IsNullOrEmpty(card))
             {
-                ShowError("请填写超级密码与充值卡");
+                MessageBox.Show("请填写超级密码与充值卡", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (!IsValidCardInput(card))
             {
-                ShowError("充值卡格式错误，请输入：26位卡号 + 空格/换行 + 18位卡密（大小写+数字）");
+                MessageBox.Show("充值卡格式错误，请输入18位纯数字卡密", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             btnDoRegister.Enabled = false;
+            var oldText = btnDoRegister.Text;
+            btnDoRegister.Text = "注册中...";
             try
             {
                 var reg = await ClientPortalService.Instance.RegisterAsync(
@@ -200,11 +223,12 @@ namespace WangShangLiaoBot.Forms
             }
             catch (Exception ex)
             {
-                ShowError($"注册失败: {ex.Message}");
+                MessageBox.Show($"注册失败: {ex.Message}", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 btnDoRegister.Enabled = true;
+                btnDoRegister.Text = oldText;
             }
         }
         
@@ -218,16 +242,18 @@ namespace WangShangLiaoBot.Forms
             
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(card))
             {
-                ShowError("请填写完整信息");
+                MessageBox.Show("请填写账号与充值卡", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (!IsValidCardInput(card))
             {
-                ShowError("充值卡格式错误，请输入：26位卡号 + 空格/换行 + 18位卡密（大小写+数字）");
+                MessageBox.Show("充值卡格式错误，请输入18位纯数字卡密", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             
             btnDoRecharge.Enabled = false;
+            var oldText = btnDoRecharge.Text;
+            btnDoRecharge.Text = "充值中...";
             try
             {
                 var result = await ClientPortalService.Instance.RechargeAsync(username, card);
@@ -237,11 +263,12 @@ namespace WangShangLiaoBot.Forms
             }
             catch (Exception ex)
             {
-                ShowError($"充值失败: {ex.Message}");
+                MessageBox.Show($"充值失败: {ex.Message}", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 btnDoRecharge.Enabled = true;
+                btnDoRecharge.Text = oldText;
             }
         }
         
@@ -256,17 +283,19 @@ namespace WangShangLiaoBot.Forms
             
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(newPassword))
             {
-                ShowError("请填写完整信息");
+                MessageBox.Show("请填写账号与新密码", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             
             if (string.IsNullOrEmpty(superPassword))
             {
-                ShowError("请输入超级密码");
+                MessageBox.Show("请输入超级密码", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             btnDoChangePassword.Enabled = false;
+            var oldText = btnDoChangePassword.Text;
+            btnDoChangePassword.Text = "提交中...";
             try
             {
                 await ClientPortalService.Instance.ChangePasswordAsync(username, superPassword, newPassword);
@@ -275,11 +304,12 @@ namespace WangShangLiaoBot.Forms
             }
             catch (Exception ex)
             {
-                ShowError($"修改失败: {ex.Message}");
+                MessageBox.Show($"修改失败: {ex.Message}", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 btnDoChangePassword.Enabled = true;
+                btnDoChangePassword.Text = oldText;
             }
         }
         
@@ -294,20 +324,15 @@ namespace WangShangLiaoBot.Forms
 
         /// <summary>
         /// Validate card input for register/recharge.
-        /// Format: CODE(26) + PASSWORD(18), both alphanumeric and case-sensitive.
+        /// 新格式: 只需18位纯数字卡密
         /// </summary>
         private bool IsValidCardInput(string input)
         {
             try
             {
-                var s = (input ?? "").Trim().Replace("\r", "\n").Replace("|", " ").Replace(",", " ");
-                var parts = s.Split(new[] { ' ', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length < 2) return false;
-                var code = parts[0];
-                var pass = parts[1];
-                if (!System.Text.RegularExpressions.Regex.IsMatch(code, "^[A-Za-z0-9]{26}$")) return false;
-                if (!System.Text.RegularExpressions.Regex.IsMatch(pass, "^[A-Za-z0-9]{18}$")) return false;
-                return true;
+                var code = (input ?? "").Trim();
+                // 卡密: 18位纯数字
+                return System.Text.RegularExpressions.Regex.IsMatch(code, "^[0-9]{18}$");
             }
             catch
             {

@@ -53,8 +53,8 @@ namespace WangShangLiaoBot.Controls.RebateTool
             "自动反水"
         };
         
-        // Tab content panels (placeholder for future content)
-        private Panel[] _tabPanels;
+        // Tab content controls (can be Panel or UserControl)
+        private Control[] _tabPanels;
         
         // Colors
         private readonly Color TabSelectedColor = Color.White;
@@ -67,6 +67,15 @@ namespace WangShangLiaoBot.Controls.RebateTool
             InitializeComponent();
             InitializeTabPanels();
             SelectTab(0);
+
+            // Auto refresh current tab data when switched
+            OnTabChanged += (_, idx) =>
+            {
+                if (idx == 0 && _statisticsAllPanel != null)
+                {
+                    _statisticsAllPanel.RefreshData(QueryStartTime, QueryEndTime);
+                }
+            };
         }
         
         /// <summary>
@@ -153,6 +162,7 @@ namespace WangShangLiaoBot.Controls.RebateTool
             };
             pnlTopNav.Controls.Add(dtpStartDate);
             xPos += 115;
+            dtpStartDate.ValueChanged += (s, e) => RefreshStatisticsAllIfVisible();
             
             // Start time picker
             dtpStartTime = new DateTimePicker
@@ -165,6 +175,7 @@ namespace WangShangLiaoBot.Controls.RebateTool
             };
             pnlTopNav.Controls.Add(dtpStartTime);
             xPos += 80;
+            dtpStartTime.ValueChanged += (s, e) => RefreshStatisticsAllIfVisible();
             
             // Arrow label
             lblArrow = new Label
@@ -187,6 +198,7 @@ namespace WangShangLiaoBot.Controls.RebateTool
             };
             pnlTopNav.Controls.Add(dtpEndDate);
             xPos += 115;
+            dtpEndDate.ValueChanged += (s, e) => RefreshStatisticsAllIfVisible();
             
             // End time picker
             dtpEndTime = new DateTimePicker
@@ -198,6 +210,7 @@ namespace WangShangLiaoBot.Controls.RebateTool
                 Value = DateTime.Today.AddDays(1).AddHours(20)
             };
             pnlTopNav.Controls.Add(dtpEndTime);
+            dtpEndTime.ValueChanged += (s, e) => RefreshStatisticsAllIfVisible();
             
             // Clear data button (right aligned)
             btnClearData = new Button
@@ -313,36 +326,188 @@ namespace WangShangLiaoBot.Controls.RebateTool
             pnlContent.SendToBack();
         }
         
+        // Statistics All panel instance
+        private StatisticsAllPanel _statisticsAllPanel;
+        private RebateCalcPanel _rebateCalcPanel;
+        private RebateSettingsPanel _rebateSettingsPanel;
+        private SingleQueryPanel _singleQueryPanel;
+        private NightSnackCalcPanel _nightSnackCalcPanel;
+        private NightSnackSettingsPanel _nightSnackSettingsPanel;
+        private UpDownRecordPanel _upDownRecordPanel;
+        private AtScoreRecordPanel _atScoreRecordPanel;
+        private PerPeriodProfitPanel _perPeriodProfitPanel;
+        private BankerProfitPanel _bankerProfitPanel;
+        private InvitationRecordPanel _invitationRecordPanel;
+        private RecordDeletePanel _recordDeletePanel;
+        private AutoRebatePanel _autoRebatePanel;
+        
         /// <summary>
         /// Initialize placeholder panels for each tab
         /// </summary>
         private void InitializeTabPanels()
         {
-            _tabPanels = new Panel[TabNames.Length];
+            _tabPanels = new Control[TabNames.Length];
             
             for (int i = 0; i < TabNames.Length; i++)
             {
-                var panel = new Panel
-                {
-                    Dock = DockStyle.Fill,
-                    BackColor = Color.White,
-                    Visible = false,
-                    Tag = TabNames[i]
-                };
+                Control tabControl;
                 
-                // Add placeholder label (for development)
-                var lblPlaceholder = new Label
+                // Create specific panel for "统计所有" tab
+                if (i == 0) // "统计所有"
                 {
-                    Text = $"【{TabNames[i]}】\n\n内容开发中...",
-                    Dock = DockStyle.Fill,
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    ForeColor = Color.Gray,
-                    Font = new Font("Microsoft YaHei UI", 12F)
-                };
-                panel.Controls.Add(lblPlaceholder);
+                    _statisticsAllPanel = new StatisticsAllPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _statisticsAllPanel;
+                }
+                else if (i == 1) // "回水计算"
+                {
+                    _rebateCalcPanel = new RebateCalcPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _rebateCalcPanel;
+                }
+                else if (i == 2) // "回水设置"
+                {
+                    _rebateSettingsPanel = new RebateSettingsPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _rebateSettingsPanel;
+                }
+                else if (i == 3) // "单独查询"
+                {
+                    _singleQueryPanel = new SingleQueryPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _singleQueryPanel;
+                }
+                else if (i == 4) // "夜宵计算"
+                {
+                    _nightSnackCalcPanel = new NightSnackCalcPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _nightSnackCalcPanel;
+                }
+                else if (i == 5) // "夜宵设置"
+                {
+                    _nightSnackSettingsPanel = new NightSnackSettingsPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _nightSnackSettingsPanel;
+                }
+                else if (i == 6) // "上下分记录"
+                {
+                    _upDownRecordPanel = new UpDownRecordPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _upDownRecordPanel;
+                }
+                else if (i == 7) // "艾特分记录"
+                {
+                    _atScoreRecordPanel = new AtScoreRecordPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _atScoreRecordPanel;
+                }
+                else if (i == 8) // "每期盈利"
+                {
+                    _perPeriodProfitPanel = new PerPeriodProfitPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _perPeriodProfitPanel;
+                }
+                else if (i == 9) // "庄家盈利"
+                {
+                    _bankerProfitPanel = new BankerProfitPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _bankerProfitPanel;
+                }
+                else if (i == 10) // "邀请记录"
+                {
+                    _invitationRecordPanel = new InvitationRecordPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _invitationRecordPanel;
+                }
+                else if (i == 11) // "记录删除"
+                {
+                    _recordDeletePanel = new RecordDeletePanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _recordDeletePanel;
+                }
+                else if (i == 12) // "自动反水"
+                {
+                    _autoRebatePanel = new AutoRebatePanel
+                    {
+                        Dock = DockStyle.Fill,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    tabControl = _autoRebatePanel;
+                }
+                else
+                {
+                    var panel = new Panel
+                    {
+                        Dock = DockStyle.Fill,
+                        BackColor = Color.White,
+                        Visible = false,
+                        Tag = TabNames[i]
+                    };
+                    
+                    // Add placeholder label (for development)
+                    var lblPlaceholder = new Label
+                    {
+                        Text = $"【{TabNames[i]}】\n\n内容开发中...",
+                        Dock = DockStyle.Fill,
+                        TextAlign = ContentAlignment.MiddleCenter,
+                        ForeColor = Color.Gray,
+                        Font = new Font("Microsoft YaHei UI", 12F)
+                    };
+                    panel.Controls.Add(lblPlaceholder);
+                    tabControl = panel;
+                }
                 
-                _tabPanels[i] = panel;
-                pnlContent.Controls.Add(panel);
+                _tabPanels[i] = tabControl;
+                pnlContent.Controls.Add(tabControl);
             }
         }
         
@@ -442,6 +607,51 @@ namespace WangShangLiaoBot.Controls.RebateTool
                     dtpEndTime.Value = dtpEndDate.Value.AddHours(23).AddMinutes(59);
                     break;
             }
+
+            RefreshStatisticsAllIfVisible();
+        }
+
+        private void RefreshStatisticsAllIfVisible()
+        {
+            // Refresh active tab if it supports refresh
+            if (_selectedTabIndex == 0 && _statisticsAllPanel != null)
+                _statisticsAllPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 1 && _rebateCalcPanel != null)
+                _rebateCalcPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 2 && _rebateSettingsPanel != null)
+                _rebateSettingsPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 3 && _singleQueryPanel != null)
+                _singleQueryPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 4 && _nightSnackCalcPanel != null)
+                _nightSnackCalcPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 5 && _nightSnackSettingsPanel != null)
+                _nightSnackSettingsPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 6 && _upDownRecordPanel != null)
+                _upDownRecordPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 7 && _atScoreRecordPanel != null)
+                _atScoreRecordPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 8 && _perPeriodProfitPanel != null)
+                _perPeriodProfitPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 9 && _bankerProfitPanel != null)
+                _bankerProfitPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 10 && _invitationRecordPanel != null)
+                _invitationRecordPanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 11 && _recordDeletePanel != null)
+                _recordDeletePanel.RefreshData(QueryStartTime, QueryEndTime);
+
+            if (_selectedTabIndex == 12 && _autoRebatePanel != null)
+                _autoRebatePanel.RefreshData(QueryStartTime, QueryEndTime);
         }
         
         private void BtnClearData_Click(object sender, EventArgs e)
@@ -509,9 +719,9 @@ namespace WangShangLiaoBot.Controls.RebateTool
         public string SelectedTabName => TabNames[_selectedTabIndex];
         
         /// <summary>
-        /// Get content panel for a specific tab (for adding custom content)
+        /// Get content control for a specific tab (for adding custom content)
         /// </summary>
-        public Panel GetTabPanel(int index)
+        public Control GetTabPanel(int index)
         {
             if (index >= 0 && index < _tabPanels.Length)
                 return _tabPanels[index];
@@ -519,9 +729,9 @@ namespace WangShangLiaoBot.Controls.RebateTool
         }
         
         /// <summary>
-        /// Get content panel by tab name
+        /// Get content control by tab name
         /// </summary>
-        public Panel GetTabPanel(string tabName)
+        public Control GetTabPanel(string tabName)
         {
             var index = Array.IndexOf(TabNames, tabName);
             return GetTabPanel(index);

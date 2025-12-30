@@ -31,14 +31,13 @@ namespace WangShangLiaoBot.Services
         public async Task<ClientLoginResult> RegisterAsync(string username, string password, string superPassword, string cardCode, string boundInfo = null, string promoterUsername = null)
         {
             var client = CreateClient();
-            var cardInput = cardCode;
+            // 新API: cardCode 直接是18位纯数字卡密
             return await client.PostDataAsync<ClientLoginResult>("client/register", new
             {
                 username,
                 password,
                 superPassword,
-                cardCode = ExtractCardCode(cardInput),
-                cardPassword = ExtractCardPassword(cardInput),
+                cardCode = (cardCode ?? "").Trim(),
                 boundInfo,
                 promoterUsername
             }).ConfigureAwait(false);
@@ -47,10 +46,10 @@ namespace WangShangLiaoBot.Services
         public async Task<RechargeResult> RechargeAsync(string username, string cardCode)
         {
             var client = CreateClient();
-            var cardInput = cardCode;
+            // 新API: cardCode 直接是18位纯数字卡密
             return await client.PostDataAsync<RechargeResult>(
                 "client/recharge",
-                new { username, cardCode = ExtractCardCode(cardInput), cardPassword = ExtractCardPassword(cardInput) }
+                new { username, cardCode = (cardCode ?? "").Trim() }
             ).ConfigureAwait(false);
         }
 
@@ -84,33 +83,6 @@ namespace WangShangLiaoBot.Services
             return await client.GetDataAsync<Dictionary<string, string>>("client/settings-private", clientToken).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Parse "card input" from UI. Supported formats:
-        /// - "CODE PASSWORD"
-        /// - "CODE\nPASSWORD"
-        /// - "CODE|PASSWORD"
-        /// Always returns trimmed token segments.
-        /// </summary>
-        private string[] SplitCardInput(string input)
-        {
-            var s = (input ?? "").Trim();
-            if (string.IsNullOrWhiteSpace(s)) return new string[0];
-            s = s.Replace("\r", "\n").Replace("|", " ").Replace(",", " ");
-            var parts = s.Split(new[] { ' ', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            return parts;
-        }
-
-        private string ExtractCardCode(string input)
-        {
-            var parts = SplitCardInput(input);
-            return parts.Length >= 1 ? parts[0] : "";
-        }
-
-        private string ExtractCardPassword(string input)
-        {
-            var parts = SplitCardInput(input);
-            return parts.Length >= 2 ? parts[1] : "";
-        }
     }
 
     internal sealed class ClientLoginResult
