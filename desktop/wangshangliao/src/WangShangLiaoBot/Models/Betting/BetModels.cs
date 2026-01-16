@@ -17,6 +17,12 @@ namespace WangShangLiaoBot.Models.Betting
 
         /// <summary>Bet amount</summary>
         public decimal Amount { get; set; }
+        
+        /// <summary>是否为二七玩法下注</summary>
+        public bool IsTwoSeven { get; set; }
+        
+        /// <summary>赔率</summary>
+        public decimal Odds { get; set; } = 1.0m;
     }
 
     /// <summary>
@@ -49,6 +55,16 @@ namespace WangShangLiaoBot.Models.Betting
 
         /// <summary>Snapshot of player's score at capture time (for [下注核对] semantics)</summary>
         public decimal ScoreBefore { get; set; }
+        
+        // ========== 兼容属性（从首个 Item 获取）==========
+        /// <summary>首个下注项的种类（兼容旧代码）</summary>
+        public BetKind Kind => Items?.Count > 0 ? Items[0].Kind : BetKind.Unknown;
+        /// <summary>首个下注项的代码（兼容旧代码）</summary>
+        public string Code => Items?.Count > 0 ? Items[0].Code : "";
+        /// <summary>首个下注项的金额（兼容旧代码）</summary>
+        public decimal Amount => Items?.Count > 0 ? Items[0].Amount : 0;
+        /// <summary>赔率（兼容旧代码，默认1.0）</summary>
+        public decimal Odds { get; set; } = 1.0m;
     }
 
     /// <summary>
@@ -68,14 +84,51 @@ namespace WangShangLiaoBot.Models.Betting
         public string Detail { get; set; }
     }
 
+    /// <summary>
+    /// Bet kind enumeration for all supported bet types
+    /// </summary>
     public enum BetKind
     {
+        /// <summary>Unknown bet type</summary>
+        Unknown,
         /// <summary>Classic Canada28 DXDS combo (XD/XS/DD/DS)</summary>
         Dxds,
-        /// <summary>Big/Small only</summary>
+        /// <summary>Big/Small only (大/小)</summary>
         BigSmall,
-        /// <summary>Odd/Even only</summary>
-        OddEven
+        /// <summary>Odd/Even only (单/双)</summary>
+        OddEven,
+        /// <summary>Pair (对子)</summary>
+        Pair,
+        /// <summary>Combination (组合)</summary>
+        Combination,
+        /// <summary>Straight (顺子)</summary>
+        Straight,
+        /// <summary>Leopard (豹子)</summary>
+        Leopard,
+        /// <summary>Digit bet 0-27 (数字)</summary>
+        Digit,
+        /// <summary>Extreme (极数/极大/极小)</summary>
+        Extreme,
+        /// <summary>Half straight (半顺)</summary>
+        HalfStraight,
+        /// <summary>Sum (和/合)</summary>
+        Sum,
+        /// <summary>Middle (中)</summary>
+        Middle,
+        /// <summary>Dragon/Tiger (龙虎)</summary>
+        DragonTiger,
+        /// <summary>Mixed (杂)</summary>
+        Mixed,
+        /// <summary>Three Army (三军)</summary>
+        ThreeArmy,
+        /// <summary>Edge bet (边/大边/小边)</summary>
+        Edge,
+        /// <summary>Tail single bet (尾单注/尾大/尾小/尾单/尾双)</summary>
+        TailSingle,
+        /// <summary>Tail combination (尾组合)</summary>
+        TailCombination,
+        /// <summary>Tail digit (尾数字)</summary>
+        TailDigit
     }
 }
 

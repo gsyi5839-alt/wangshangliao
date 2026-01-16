@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace WangShangLiaoBot.Models
 {
@@ -9,11 +11,89 @@ namespace WangShangLiaoBot.Models
     [Serializable]
     public class AppConfig
     {
+        private static AppConfig _instance;
+        private static readonly object _lock = new object();
+        private static string _configPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "WangShangLiaoBot", "config.xml");
+
+        /// <summary>
+        /// 获取单例实例
+        /// </summary>
+        public static AppConfig Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = Load();
+                        }
+                    }
+                }
+                return _instance;
+            }
+        }
+
+        /// <summary>
+        /// 从文件加载配置
+        /// </summary>
+        public static AppConfig Load()
+        {
+            try
+            {
+                if (File.Exists(_configPath))
+                {
+                    var serializer = new XmlSerializer(typeof(AppConfig));
+                    using (var reader = new StreamReader(_configPath))
+                    {
+                        return (AppConfig)serializer.Deserialize(reader) ?? new AppConfig();
+                    }
+                }
+            }
+            catch { }
+            return new AppConfig();
+        }
+
+        /// <summary>
+        /// 保存配置到文件
+        /// </summary>
+        public void Save()
+        {
+            try
+            {
+                var dir = Path.GetDirectoryName(_configPath);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                var serializer = new XmlSerializer(typeof(AppConfig));
+                using (var writer = new StreamWriter(_configPath))
+                {
+                    serializer.Serialize(writer, this);
+                }
+            }
+            catch { }
+        }
+
+        // 兼容属性
+        /// <summary>旺商号（兼容别名）</summary>
+        public string WangWangId => MyWangShangId;
+        /// <summary>昵称（兼容别名）</summary>
+        public string Nickname { get; set; } = "";
+        /// <summary>机器人旺商号（兼容别名）</summary>
+        public string BotWangWangId => MyWangShangId;
+
         // ===== 登录设置 =====
         /// <summary>账号</summary>
         public string Username { get; set; } = "";
         /// <summary>是否记住用户</summary>
         public bool RememberUser { get; set; } = false;
+        /// <summary>跳过登录验证（直接启动主界面）</summary>
+        public bool SkipLogin { get; set; } = false;
 
         // ===== Server API Settings =====
         /// <summary>Client API base URL, e.g. https://bocail.com/api</summary>
@@ -38,6 +118,24 @@ namespace WangShangLiaoBot.Models
         public string WangShangLiaoPath { get; set; } = @"C:\旺商聊";
         /// <summary>CDP调试端口</summary>
         public int DebugPort { get; set; } = 9222;
+        
+        // ===== ZCG连接配置 (基于逆向分析) =====
+        /// <summary>ZCG安装目录</summary>
+        public string ZcgPath { get; set; } = "";
+        /// <summary>云信AppKey (ZCG使用: b03cfcd909dbf05c25163cc8c7e7b6cf)</summary>
+        public string NimAppKey { get; set; } = "b03cfcd909dbf05c25163cc8c7e7b6cf";
+        /// <summary>云信Accid (数字ID)</summary>
+        public string NimAccid { get; set; } = "";
+        /// <summary>云信Token (登录凭证)</summary>
+        public string NimToken { get; set; } = "";
+        /// <summary>签名Token (S_TOKEN)</summary>
+        public string SignToken { get; set; } = "";
+        /// <summary>内部UID</summary>
+        public string NimUid { get; set; } = "";
+        /// <summary>XPlugin端口 (默认14745)</summary>
+        public int XPluginPort { get; set; } = 14745;
+        /// <summary>是否使用ZCG连接方式</summary>
+        public bool UseZcgConnection { get; set; } = false;
         
         // ===== 自动回复设置 =====
         /// <summary>是否启用自动回复</summary>
@@ -73,7 +171,7 @@ namespace WangShangLiaoBot.Models
         
         // ===== 上下分设置 =====
         /// <summary>上分关键字</summary>
-        public string UpScoreKeywords { get; set; } = "查|。";
+        public string UpScoreKeywords { get; set; } = "查|c|。";
         /// <summary>下分关键字</summary>
         public string DownScoreKeywords { get; set; } = "回";
         /// <summary>上分后X把起才可下分</summary>
@@ -108,6 +206,160 @@ namespace WangShangLiaoBot.Models
         public string DontRushText { get; set; } = "[艾特] 您的提款请求我们正在火速审核~~";
         /// <summary>拒绝词</summary>
         public string RejectText { get; set; } = "[艾特] 拒绝，请您联系接单核实";
+        
+        // ===== 经典玩法设置 - 大小单双超设置 =====
+        /// <summary>大小单双超设置数字 (如 "13|14")</summary>
+        public string SizeOddEvenNumbers { get; set; } = "13|14";
+        /// <summary>大小单双超-算总注(true)/算单注(false)</summary>
+        public bool SizeOddEvenSumBet { get; set; } = true;
+        /// <summary>大小单双超-行1最小</summary>
+        public decimal SizeRow1Min { get; set; } = 2;
+        /// <summary>大小单双超-行1最大</summary>
+        public decimal SizeRow1Max { get; set; } = 10000;
+        /// <summary>大小单双超-行1赔率</summary>
+        public decimal SizeRow1Odds { get; set; } = 0;
+        /// <summary>大小单双超-行2最小</summary>
+        public decimal SizeRow2Min { get; set; } = 1000;
+        /// <summary>大小单双超-行2最大</summary>
+        public decimal SizeRow2Max { get; set; } = 60000;
+        /// <summary>大小单双超-行2赔率</summary>
+        public decimal SizeRow2Odds { get; set; } = 0;
+        /// <summary>大小单双超-行3最小</summary>
+        public decimal SizeRow3Min { get; set; } = 6000;
+        /// <summary>大小单双超-行3最大</summary>
+        public decimal SizeRow3Max { get; set; } = 0;
+        /// <summary>大小单双超-行3赔率</summary>
+        public decimal SizeRow3Odds { get; set; } = 0;
+        /// <summary>大小单双超-行4最小</summary>
+        public decimal SizeRow4Min { get; set; } = 6000;
+        /// <summary>大小单双超-行4最大</summary>
+        public decimal SizeRow4Max { get; set; } = 0;
+        /// <summary>大小单双超-行4赔率</summary>
+        public decimal SizeRow4Odds { get; set; } = 0;
+        
+        // ===== 经典玩法设置 - 大双小单超设置 =====
+        /// <summary>大双小单超-总注超1</summary>
+        public decimal BigDoubleSmallSingle1Amount { get; set; } = 0;
+        /// <summary>大双小单超-赔率1</summary>
+        public decimal BigDoubleSmallSingle1Odds { get; set; } = 0;
+        /// <summary>大双小单超-总注超2</summary>
+        public decimal BigDoubleSmallSingle2Amount { get; set; } = 1000;
+        /// <summary>大双小单超-赔率2</summary>
+        public decimal BigDoubleSmallSingle2Odds { get; set; } = 0;
+        
+        // ===== 经典玩法设置 - 大单小双超设置 =====
+        /// <summary>大单小双超-总注超1</summary>
+        public decimal BigSingleSmallDouble1Amount { get; set; } = 50000;
+        /// <summary>大单小双超-赔率1</summary>
+        public decimal BigSingleSmallDouble1Odds { get; set; } = 0;
+        /// <summary>大单小双超-总注超2</summary>
+        public decimal BigSingleSmallDouble2Amount { get; set; } = 10000;
+        /// <summary>大单小双超-赔率2</summary>
+        public decimal BigSingleSmallDouble2Odds { get; set; } = 0;
+        
+        // ===== 经典玩法设置 - 豹/顺/对子 =====
+        /// <summary>豹顺对开关</summary>
+        public bool LeopardSequencePairEnabled { get; set; } = true;
+        /// <summary>对子回本</summary>
+        public bool PairReturn { get; set; } = true;
+        /// <summary>顺子回本</summary>
+        public bool SequenceReturn { get; set; } = true;
+        /// <summary>豹子回本</summary>
+        public bool LeopardReturn { get; set; } = false;
+        /// <summary>豹子通杀</summary>
+        public bool LeopardKillAll { get; set; } = false;
+        /// <summary>半顺杂开关</summary>
+        public bool HalfMixedEnabled { get; set; } = false;
+        /// <summary>0,9回本</summary>
+        public bool Digit09Return { get; set; } = false;
+        /// <summary>1314对/顺/豹子回本</summary>
+        public bool Digit1314Return { get; set; } = false;
+        /// <summary>数字开对/顺/豹子回本</summary>
+        public bool NumLSPReturn { get; set; } = false;
+        /// <summary>数字开1314对/顺/豹子回本</summary>
+        public bool Num1314LSPReturn { get; set; } = false;
+        /// <summary>极数开对/顺/豹子回本</summary>
+        public bool ExtremeLSPReturn { get; set; } = false;
+        /// <summary>开1314，中对子回本</summary>
+        public bool Open1314PairReturn { get; set; } = false;
+        /// <summary>890,910算顺子</summary>
+        public bool Seq890910AsSequence { get; set; } = true;
+        
+        // ===== 经典玩法设置 - 超无视 =====
+        /// <summary>超无视-算总注(true)/算单注(false)</summary>
+        public bool IgnoreOverSumBet { get; set; } = true;
+        /// <summary>超无视-金额超</summary>
+        public decimal IgnoreOverAmount { get; set; } = 0;
+        /// <summary>超无视-记超无视</summary>
+        public bool IgnoreOverEnabled { get; set; } = false;
+        /// <summary>杀双多组对压不记超无视</summary>
+        public bool KillDoubleIgnore { get; set; } = false;
+        /// <summary>无13 14赔率</summary>
+        public bool No1314Odds { get; set; } = false;
+        
+        // ===== 经典玩法设置 - 赔率 =====
+        /// <summary>大小单双赔率</summary>
+        public decimal DxdsOdds { get; set; } = 1.8m;
+        /// <summary>大单小双赔率</summary>
+        public decimal BigOddSmallEvenOdds { get; set; } = 5.0m;
+        /// <summary>大双小单赔率</summary>
+        public decimal BigEvenSmallOddOdds { get; set; } = 5.0m;
+        /// <summary>极大极小赔率</summary>
+        public decimal ExtremeOdds { get; set; } = 0m;
+        /// <summary>特码数字赔率 (0-27)</summary>
+        public decimal DigitOdds { get; set; } = 9.0m;
+        /// <summary>对子赔率</summary>
+        public decimal PairOdds { get; set; } = 2.0m;
+        /// <summary>顺子赔率</summary>
+        public decimal StraightOdds { get; set; } = 0m;
+        /// <summary>半顺赔率</summary>
+        public decimal HalfStraightOdds { get; set; } = 0m;
+        /// <summary>豹子赔率</summary>
+        public decimal LeopardOdds { get; set; } = 49.0m;
+        /// <summary>杂赔率</summary>
+        public decimal MixedOdds { get; set; } = 0m;
+        /// <summary>大边赔率</summary>
+        public decimal BigEdgeOdds { get; set; } = 0m;
+        /// <summary>小边赔率</summary>
+        public decimal SmallEdgeOdds { get; set; } = 0m;
+        /// <summary>中赔率</summary>
+        public decimal MiddleOdds { get; set; } = 0m;
+        /// <summary>边历史赔率</summary>
+        public decimal EdgeHistoryOdds { get; set; } = 0m;
+        /// <summary>边赔率 (通用)</summary>
+        public decimal EdgeOdds { get; set; } = 5.0m;
+        /// <summary>和赔率</summary>
+        public decimal SumOdds { get; set; } = 49.0m;
+        /// <summary>组合赔率 (经典玩法)</summary>
+        public decimal CombinationOdds { get; set; } = 1.2m;
+        
+        // ===== 经典玩法设置 - 极数 =====
+        /// <summary>极大阈值起始 (默认22)</summary>
+        public int ExtremeMax { get; set; } = 22;
+        /// <summary>极大阈值结束 (默认27)</summary>
+        public int ExtremeMaxEnd { get; set; } = 27;
+        /// <summary>极小阈值起始 (默认0)</summary>
+        public int ExtremeMin { get; set; } = 0;
+        /// <summary>极小阈值结束 (默认5)</summary>
+        public int ExtremeMinEnd { get; set; } = 5;
+        
+        // ===== 经典玩法设置 - 单独数字赔率 =====
+        /// <summary>启用单独数字赔率</summary>
+        public bool SingleDigitOddsEnabled { get; set; } = false;
+        /// <summary>单独数字赔率 (格式: "0:9,1:9,2:9...")</summary>
+        public string SingleDigitOddsList { get; set; } = "0:9,1:9,2:9,3:9,4:9,5:9,6:9,7:9,8:9,9:9";
+        
+        // ===== 经典玩法设置 - 特码格式 =====
+        /// <summary>特码下注字眼</summary>
+        public string SpecialCodeChars { get; set; } = "操|草|点|+|*|'|T";
+        /// <summary>特码格式 - true=特码T金额, false=金额T特码</summary>
+        public bool SpecialCodeFirst { get; set; } = false;
+        /// <summary>以小的金额为特码</summary>
+        public bool SmallAmountAsSpecial { get; set; } = true;
+        /// <summary>单点最高赔付</summary>
+        public decimal MaxSinglePayout { get; set; } = 5000;
+        /// <summary>最大数字个数</summary>
+        public int MaxDigitCount { get; set; } = 3;
         
         // ===== 尾球玩法设置 =====
         /// <summary>尾球玩法开启</summary>
@@ -256,6 +508,8 @@ namespace WangShangLiaoBot.Models
         public bool EnableLotteryNotify { get; set; } = true;
         /// <summary>开奖带8</summary>
         public bool LotteryWith8 { get; set; } = false;
+        /// <summary>开奖发送内容模板 - 支持变量替换</summary>
+        public string LotterySendContent { get; set; } = "";
         /// <summary>开奖图片发送</summary>
         public bool LotteryImageSend { get; set; } = false;
         /// <summary>期数</summary>
@@ -356,6 +610,8 @@ namespace WangShangLiaoBot.Models
         public string InternalDataHasAttack { get; set; } = "";
         
         // ===== 内部回复设置 - 进群/群规 =====
+        /// <summary>进群/群规触发关键词（用|分隔多个关键词）</summary>
+        public string InternalGroupRulesKeyword { get; set; } = "群规|规则|新人|福利|玩法";
         /// <summary>进群/群规说明</summary>
         public string InternalGroupRules { get; set; } = "认准管理员请加客服，群内有规则/福利说明，请遵守群规，谢谢！";
         

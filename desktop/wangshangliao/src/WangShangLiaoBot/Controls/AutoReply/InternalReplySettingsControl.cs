@@ -49,7 +49,8 @@ namespace WangShangLiaoBot.Controls.AutoReply
             txtDataNoAttack.Text = config.InternalDataNoAttack;
             txtDataHasAttack.Text = config.InternalDataHasAttack;
             
-            // Group rules (left bottom)
+            // Group rules keywords and content (left bottom)
+            txtGroupRulesKeyword.Text = config.InternalGroupRulesKeyword;
             txtGroupRules.Text = config.InternalGroupRules;
             
             // Private chat tail
@@ -88,7 +89,8 @@ namespace WangShangLiaoBot.Controls.AutoReply
             config.InternalDataNoAttack = txtDataNoAttack.Text;
             config.InternalDataHasAttack = txtDataHasAttack.Text;
             
-            // Group rules (left bottom)
+            // Group rules keywords and content (left bottom)
+            config.InternalGroupRulesKeyword = txtGroupRulesKeyword.Text;
             config.InternalGroupRules = txtGroupRules.Text;
             
             // Private chat tail

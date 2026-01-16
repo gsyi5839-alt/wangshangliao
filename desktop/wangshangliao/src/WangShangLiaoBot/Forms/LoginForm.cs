@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WangShangLiaoBot.Services;
 using WangShangLiaoBot.Utils;
@@ -107,32 +108,31 @@ namespace WangShangLiaoBot.Forms
                     Logger.Error($"Fetch settings failed: {ex.Message}");
                 }
 
-                // Load announcement and version list (best effort).
-                try
-                {
-                    var ann = await ClientPortalService.Instance.GetAnnouncementAsync();
-                    if (ann != null && !string.IsNullOrWhiteSpace(ann.content))
-                        MessageBox.Show(ann.content, ann.title ?? "公告", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch { }
-                try
-                {
-                    var vers = await ClientPortalService.Instance.GetVersionsAsync(10);
-                    if (vers != null && vers.Count > 0)
-                    {
-                        var lines = new System.Text.StringBuilder();
-                        foreach (var v in vers)
-                            lines.AppendLine($"{v.version}: {v.content}");
-                        MessageBox.Show(lines.ToString(), "更新日志", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                catch { }
-                
                 Logger.Info($"用户 {username} 登录成功");
                 
-                // 登录成功
+                // 【优化】立即关闭登录窗口，让主界面尽快显示
+                // 公告和版本列表改为在主界面显示后异步加载
                 this.DialogResult = DialogResult.OK;
                 this.Close();
+                
+                // 【优化】公告和版本列表移到后台异步加载，不阻塞主界面
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await Task.Delay(2000); // 等待主界面显示
+                        var ann = await ClientPortalService.Instance.GetAnnouncementAsync();
+                        if (ann != null && !string.IsNullOrWhiteSpace(ann.content))
+                        {
+                            // 在 UI 线程显示
+                            System.Windows.Forms.Application.OpenForms[0]?.BeginInvoke(new Action(() =>
+                            {
+                                MessageBox.Show(ann.content, ann.title ?? "公告", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }));
+                        }
+                    }
+                    catch { }
+                });
             }
             catch (Exception ex)
             {

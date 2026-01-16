@@ -299,9 +299,11 @@ namespace WangShangLiaoBot.Forms
                     
                     try
                     {
-                        if (!ChatService.Instance.IsConnected)
+                        // 检查副框架连接状态
+                        var frameworkClient = Services.HPSocket.FrameworkClient.Instance;
+                        if (!frameworkClient.IsConnected)
                         {
-                            lblFetchStatus.Text = "请先连接旺商聊";
+                            lblFetchStatus.Text = "请先连接副框架";
                             lblFetchStatus.ForeColor = Color.Red;
                             btnFetch.Enabled = true;
                             return;

@@ -46,3 +46,16 @@ Thumbs.db
 # Cursor
 .cursor/
 downloads/
+
+# Third-party libraries
+Lagrange.Core/
+
+# Desktop build outputs
+desktop/wangshangliao/dist/
+
+# Claude settings
+.claude/
+
+
+desktop/wangshangliao/libs/HP-Socket/
+Lagrange.Core/

@@ -15,7 +15,7 @@
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,10 +25,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <!-- x86 Platform -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -48,14 +68,24 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <!-- HPSocket.Net 高性能网络通信框架 -->
+    <Reference Include="HPSocket.Net">
+      <HintPath>packages\HPSocket.Net.6.0.7.1\lib\net40\HPSocket.Net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <!-- 入口 -->
     <Compile Include="Program.cs" />
+    
+    <!-- ===== Forms - 窗体 ===== -->
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SplashForm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
@@ -63,6 +93,14 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MainForm.Billing.cs" />
+    <Compile Include="Forms\MainForm.Framework.cs" />
+    <Compile Include="Forms\MainForm.Lottery.cs" />
+    <Compile Include="Forms\MainForm.Players.cs" />
+    <Compile Include="Forms\MainForm.RebateTool.cs" />
+    <Compile Include="Forms\MainForm.Settings.cs" />
+    <Compile Include="Forms\MainForm.Startup.cs" />
+    <Compile Include="Forms\MainForm.UIEvents.cs" />
     <Compile Include="Forms\ScoreForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +116,9 @@
     <Compile Include="Forms\PrivateShillForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\SealSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Settings\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,50 +131,159 @@
     <Compile Include="Forms\Settings\BillSettingsForm.Designer.cs">
       <DependentUpon>BillSettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SealSettingsForm.cs">
+    <Compile Include="Forms\Settings\SystemSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Services\AccountService.cs" />
-    <Compile Include="Services\ChatService.cs" />
-    <Compile Include="Services\AutoReplyService.cs" />
-    <Compile Include="Services\ConfigService.cs" />
-    <Compile Include="Services\DataService.cs" />
-    <Compile Include="Services\RunLogService.cs" />
-    <Compile Include="Services\LotteryService.cs" />
-    <Compile Include="Services\HttpJsonClient.cs" />
-    <Compile Include="Services\ClientPortalService.cs" />
-    <Compile Include="Services\TemplateEngine.cs" />
-    <Compile Include="Services\TemplateEngine.Format.cs" />
-    <Compile Include="Services\TemplateEngine.Betting.cs" />
-    <Compile Include="Services\Betting\OddsConfigService.cs" />
-    <Compile Include="Services\Betting\BetMessageParser.cs" />
+    
+    <!-- ===== Services/Accounts - 账号服务 ===== -->
+    <Compile Include="Services\Accounts\AccountService.cs" />
+    
+    <!-- ===== Services/Betting - 下注服务 ===== -->
+    <Compile Include="Services\Betting\AutoSettlementService.cs" />
     <Compile Include="Services\Betting\BetLedgerService.cs" />
+    <Compile Include="Services\Betting\BetMessageParser.cs" />
     <Compile Include="Services\Betting\BetSettlementService.cs" />
-    <Compile Include="Services\Spam\SpamSettingsService.cs" />
+    <Compile Include="Services\Betting\OddsConfigService.cs" />
+    <Compile Include="Services\Betting\OddsService.cs" />
+    <Compile Include="Services\Betting\TwoSevenService.cs" />
+    
+    <!-- ===== Services/Bot - 机器人核心 ===== -->
+    <Compile Include="Services\Bot\BotController.cs" />
+    <Compile Include="Services\Bot\MessageDispatcher.cs" />
+    <Compile Include="Services\Bot\Handlers\AutoReplyHandler.cs" />
+    <Compile Include="Services\Bot\Handlers\BetHandler.cs" />
+    <Compile Include="Services\Bot\Handlers\BonusHandler.cs" />
+    <Compile Include="Services\Bot\Handlers\GuessNumberHandler.cs" />
+    <Compile Include="Services\Bot\Handlers\ScoreHandler.cs" />
+    <Compile Include="Services\Bot\Handlers\SpeechDetectionHandler.cs" />
+    <Compile Include="Services\Bot\Handlers\TrusteeHandler.cs" />
+    
+    <!-- ===== Services/Core - 核心服务 ===== -->
+    <Compile Include="Services\Core\ConfigSyncManager.cs" />
+    <Compile Include="Services\Core\DataService.cs" />
+    <Compile Include="Services\Core\RunLogService.cs" />
+    
+    <!-- ===== Services/DirectConnection - 直连服务 (实验性，暂不编译) ===== -->
+    <!-- 这些是实验性直连服务，待稳定后启用
+    <Compile Include="Services\DirectConnection\DirectBotService.cs" />
+    <Compile Include="Services\DirectConnection\NimMessageService.cs" />
+    <Compile Include="Services\DirectConnection\WangShangLiaoApiService.cs" />
+    <Compile Include="Services\DirectConnection\XClientService.cs" />
+    -->
+    
+    <!-- ===== Services/Finance - 财务服务 ===== -->
+    <Compile Include="Services\Finance\BonusActivityService.cs" />
+    <Compile Include="Services\Finance\BonusService.cs" />
+    <Compile Include="Services\Finance\RebateService.cs" />
+    <Compile Include="Services\Finance\ScoreService.cs" />
+    <Compile Include="Services\Finance\TrusteeService.cs" />
+    
+    <!-- ===== Services/Games - 游戏服务 ===== -->
+    <Compile Include="Services\Games\DragonReduceService.cs" />
+    <Compile Include="Services\Games\GuessNumberService.cs" />
+    
+    <!-- ===== Services/HPSocket - 网络通信 ===== -->
+    <Compile Include="Services\HPSocket\FrameworkClient.cs" />
+    
+    <!-- ===== Services/Integration - 集成服务 ===== -->
+    <Compile Include="Services\Integration\ClientPortalService.cs" />
+    <Compile Include="Services\Integration\HttpJsonClient.cs" />
+    
+    <!-- ===== Services/Lottery - 开奖服务 ===== -->
+    <Compile Include="Services\Lottery\LotteryService.cs" />
+    <Compile Include="Services\Lottery\SealingService.cs" />
+    
+    <!-- ===== Services/Media - 媒体服务 ===== -->
+    <Compile Include="Services\Media\ImageGeneratorService.cs" />
+    
+    <!-- ===== Services/Messaging - 消息服务 ===== -->
+    <Compile Include="Services\Messaging\AdminCommandReplaceService.cs" />
+    <Compile Include="Services\Messaging\AutoReplyService.cs" />
+    <Compile Include="Services\Messaging\ChatService.cs" />
+    <Compile Include="Services\Messaging\ChatService.GroupManagement.cs" />
+    <Compile Include="Services\Messaging\ChatService.HPSocket.cs" />
+    <Compile Include="Services\Messaging\ChatService.MessageApis.cs" />
+    <Compile Include="Services\Messaging\ChatService.NimAdditionalApis.cs" />
+    <Compile Include="Services\Messaging\ChatService.Polling.cs" />
+    <Compile Include="Services\Messaging\ChatService.SessionApis.cs" />
+    <Compile Include="Services\Messaging\ChatService.SystemApis.cs" />
+    <Compile Include="Services\Messaging\ChatService.UIAutomation.cs" />
+    <Compile Include="Services\Messaging\ChatService.UserFriendApis.cs" />
+    <Compile Include="Services\Messaging\MessageTemplateService.cs" />
+    <Compile Include="Services\Messaging\SendMessageReplaceService.cs" />
+    <Compile Include="Services\Messaging\TemplateEngine.cs" />
+    <Compile Include="Services\Messaging\TemplateEngine.Betting.cs" />
+    <Compile Include="Services\Messaging\TemplateEngine.Format.cs" />
+    
+    <!-- ===== Services/Moderation - 管理服务 ===== -->
+    <Compile Include="Services\Moderation\AdminCommandService.cs" />
+    <Compile Include="Services\Moderation\CardLockService.cs" />
+    <Compile Include="Services\Moderation\PrivateShillService.cs" />
+    <Compile Include="Services\Moderation\SensitiveOperationService.cs" />
+    <Compile Include="Services\Moderation\ShillService.cs" />
+    <Compile Include="Services\Moderation\SpeechDetectionService.cs" />
+    
+    <!-- ===== Services/PureClient - 纯客户端 (实验性，暂不编译) ===== -->
+    <!-- 这些文件依赖 Newtonsoft.Json，等稳定后再启用
+    <Compile Include="Services\PureClient\HandshakeAnalyzer.cs" />
+    <Compile Include="Services\PureClient\NimDirectClient.cs" />
+    <Compile Include="Services\PureClient\WslCrypto.cs" />
+    <Compile Include="Services\PureClient\WslProtobuf.cs" />
+    <Compile Include="Services\PureClient\WslPureClient.cs" />
+    <Compile Include="Services\PureClient\WslTcpProtocol.cs" />
+    -->
+    
+    <!-- ===== Services/QXFramework - QX框架 ===== -->
+    <Compile Include="Services\QXFramework\QXMessageCallback.cs" />
+    <Compile Include="Services\QXFramework\QXNativeMethods.cs" />
+    <Compile Include="Services\QXFramework\QXService.cs" />
+    
+    <!-- ===== Services/Settings - 设置服务 ===== -->
+    <Compile Include="Services\Settings\AtReasonService.cs" />
+    <Compile Include="Services\Settings\BetAttackRangeSettingsService.cs" />
+    <Compile Include="Services\Settings\BetProcessSettingsService.cs" />
+    <Compile Include="Services\Settings\CardSettingsService.cs" />
+    <Compile Include="Services\Settings\ConfigService.cs" />
+    <Compile Include="Services\Settings\LotteryDelayService.cs" />
+    <Compile Include="Services\Settings\SettlementTimeService.cs" />
+    
+    <!-- ===== Services/Spam - 刷屏检测 ===== -->
     <Compile Include="Services\Spam\SpamDetectionService.cs" />
-    <Compile Include="Services\CardSettingsService.cs" />
-    <Compile Include="Services\TrusteeService.cs" />
-    <Compile Include="Services\BonusActivityService.cs" />
-    <Compile Include="Services\ShillService.cs" />
-    <Compile Include="Services\PrivateShillService.cs" />
-    <Compile Include="Services\AtReasonService.cs" />
-    <Compile Include="Services\SensitiveOperationService.cs" />
-    <Compile Include="Services\SettlementTimeService.cs" />
-    <Compile Include="Services\LotteryDelayService.cs" />
-    <Compile Include="Services\AdminCommandReplaceService.cs" />
-    <Compile Include="Services\SendMessageReplaceService.cs" />
+    <Compile Include="Services\Spam\SpamSettingsService.cs" />
+    
+    <!-- ===== Services/XClient - X客户端/ZCG兼容层 ===== -->
+    <!-- <Compile Include="Services\XClient\XClientProtocol.cs" /> 使用C#8特性，暂时排除 -->
+    <Compile Include="Services\XClient\XPluginProtocol.cs" />
+    <Compile Include="Services\XClient\XPluginMessageAdapter.cs" />
+    <Compile Include="Services\XClient\ZcgConfigCodec.cs" />
+    <Compile Include="Services\XClient\ZcgConfigImporter.cs" />
+    <Compile Include="Services\XClient\ZcgStartupService.cs" />
+    <Compile Include="Services\XClient\YxSdkProxyServer.cs" />
+    
+    <!-- ===== Services/Other ===== -->
+    <Compile Include="Services\WelcomeService.cs" />
+    
+    <!-- ===== Models - 数据模型 ===== -->
     <Compile Include="Models\AppConfig.cs" />
     <Compile Include="Models\BotAccount.cs" />
     <Compile Include="Models\ChatMessage.cs" />
+    <Compile Include="Models\TeamMember.cs" />
+    <Compile Include="Models\TeamInfo.cs" />
+    <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Models\RunLogEntry.cs" />
-    <Compile Include="Models\Betting\BetModels.cs" />
-    <Compile Include="Models\Betting\ClassicOddsConfig.cs" />
-    <Compile Include="Models\Spam\SpamKeywordRule.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\TrusteeItem.cs" />
+    <Compile Include="Models\Betting\BetModels.cs" />
+    <Compile Include="Models\Betting\ClassicOddsConfig.cs" />
+    <Compile Include="Models\Betting\FullOddsConfig.cs" />
+    <Compile Include="Models\Spam\SpamKeywordRule.cs" />
+    
+    <!-- ===== Utils - 工具类 ===== -->
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\MessageDecoder.cs" />
     <Compile Include="Utils\ImeGuard.cs" />
+    
+    <!-- ===== Controls - UI控件 ===== -->
     <Compile Include="Controls\BillSendSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -206,6 +356,14 @@
     <Compile Include="Controls\SystemSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\OddsSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\OddsSettingsControl.Designer.cs">
+      <DependentUpon>OddsSettingsControl.cs</DependentUpon>
+    </Compile>
+    
+    <!-- Controls/OtherSettings -->
     <Compile Include="Controls\OtherSettings\AtReasonPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -236,6 +394,8 @@
     <Compile Include="Controls\OtherSettings\Faq\NoAtButShowNickPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    
+    <!-- Controls/AutoReply -->
     <Compile Include="Controls\AutoReply\InternalReplySettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -248,12 +408,8 @@
     <Compile Include="Controls\AutoReply\VariableHelpControl.Designer.cs">
       <DependentUpon>VariableHelpControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\OddsSettingsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\OddsSettingsControl.Designer.cs">
-      <DependentUpon>OddsSettingsControl.cs</DependentUpon>
-    </Compile>
+    
+    <!-- Controls/Odds -->
     <Compile Include="Controls\Odds\ClassicPlaySettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -290,6 +446,8 @@
     <Compile Include="Controls\Odds\OtherPlaySettingsControl.Designer.cs">
       <DependentUpon>OtherPlaySettingsControl.cs</DependentUpon>
     </Compile>
+    
+    <!-- Controls/BetProcess -->
     <Compile Include="Controls\BetProcess\BetBasicSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -302,6 +460,8 @@
     <Compile Include="Controls\BetProcess\BetAttackRangeControl.Designer.cs">
       <DependentUpon>BetAttackRangeControl.cs</DependentUpon>
     </Compile>
+    
+    <!-- Controls/SealSettings -->
     <Compile Include="Controls\SealSettings\SealMessagePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -314,6 +474,8 @@
     <Compile Include="Controls\SealSettings\SealTabPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    
+    <!-- Controls/RebateTool -->
     <Compile Include="Controls\RebateTool\RebateToolControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -356,6 +518,8 @@
     <Compile Include="Controls\RebateTool\AutoRebatePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    
+    <!-- ===== 资源文件 ===== -->
     <EmbeddedResource Include="Forms\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -369,6 +533,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  
+  <!-- ===== 构建后自动复制 HPSocket 原生 DLL ===== -->
+  <Target Name="CopyHPSocketNativeDll" AfterTargets="Build">
+    <PropertyGroup>
+      <HPSocketNativeDll>packages\HPSocket.Net.6.0.7.1\runtimes\win-x86\native\HPSocket4C.dll</HPSocketNativeDll>
+    </PropertyGroup>
+    <Copy SourceFiles="$(HPSocketNativeDll)" DestinationFolder="$(TargetDir)" 
+          Condition="Exists('$(HPSocketNativeDll)') And !Exists('$(TargetDir)HPSocket4C.dll')" 
+          SkipUnchangedFiles="true" />
+    <Message Text="已复制 HPSocket4C.dll 到 $(TargetDir)" Importance="high" 
+             Condition="Exists('$(HPSocketNativeDll)')" />
+  </Target>
+  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
-

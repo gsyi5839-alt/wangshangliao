@@ -376,7 +376,13 @@ namespace WangShangLiaoBot.Forms
         /// <summary>
         /// 添加上分请求到列表
         /// </summary>
-        public void AddUpScoreRequest(string playerId, string nickname, string score, string grain, string count)
+        /// <param name="playerId">玩家ID</param>
+        /// <param name="nickname">昵称</param>
+        /// <param name="score">分数/金额</param>
+        /// <param name="grain">余粮</param>
+        /// <param name="count">次数</param>
+        /// <param name="speakContent">喊话内容（原始消息）</param>
+        public void AddUpScoreRequest(string playerId, string nickname, string score, string grain, string count, string speakContent = "")
         {
             var item = new ListViewItem(playerId);
             item.SubItems.Add(nickname);
@@ -385,7 +391,11 @@ namespace WangShangLiaoBot.Forms
             item.SubItems.Add(count);
             listUpRequests.Items.Add(item);
             
-            lblUpStatus.Text = string.Format("待处理上分: {0}", listUpRequests.Items.Count);
+            // Update speak content display
+            txtUpSpeakContent.Text = speakContent;
+            txtRequestUpScore.Text = score;
+            
+            lblUpStatus.Text = string.Format("{0}({1})<{2}>", nickname, playerId.Length > 4 ? playerId.Substring(playerId.Length - 4) : playerId, DateTime.Now.ToString("HH:mm"));
             lblUpStatus.ForeColor = Color.Red;
             
             // 播放提示音
@@ -404,7 +414,13 @@ namespace WangShangLiaoBot.Forms
         /// <summary>
         /// 添加下分请求到列表
         /// </summary>
-        public void AddDownScoreRequest(string playerId, string nickname, string score, string grain, string count)
+        /// <param name="playerId">玩家ID</param>
+        /// <param name="nickname">昵称</param>
+        /// <param name="score">分数/金额</param>
+        /// <param name="grain">余粮</param>
+        /// <param name="count">次数</param>
+        /// <param name="speakContent">喊话内容（原始消息）</param>
+        public void AddDownScoreRequest(string playerId, string nickname, string score, string grain, string count, string speakContent = "")
         {
             var item = new ListViewItem(playerId);
             item.SubItems.Add(nickname);
@@ -413,7 +429,11 @@ namespace WangShangLiaoBot.Forms
             item.SubItems.Add(count);
             listDownRequests.Items.Add(item);
             
-            lblDownStatus.Text = string.Format("待处理下分: {0}", listDownRequests.Items.Count);
+            // Update speak content display
+            txtDownSpeakContent.Text = speakContent;
+            txtRequestDownScore.Text = score;
+            
+            lblDownStatus.Text = string.Format("{0}({1})<{2}>", nickname, playerId.Length > 4 ? playerId.Substring(playerId.Length - 4) : playerId, DateTime.Now.ToString("HH:mm"));
             lblDownStatus.ForeColor = Color.Red;
             
             // 播放提示音

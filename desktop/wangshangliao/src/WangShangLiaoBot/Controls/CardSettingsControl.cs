@@ -227,22 +227,51 @@ namespace WangShangLiaoBot.Controls
 
             try
             {
-                if (!ChatService.Instance.IsConnected)
+                // 检查副框架连接（主框架通过副框架执行操作）
+                var frameworkClient = Services.HPSocket.FrameworkClient.Instance;
+                if (!frameworkClient.IsConnected)
                 {
-                    MessageBox.Show("请先连接旺商聊！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("请先连接副框架！\n\n副框架（招财狗框架）需要先启动并连接旺商聊", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // TODO: 实现批量修改名片功能
-                // 需要调用 ChatService 的修改群名片方法
-                await System.Threading.Tasks.Task.Delay(1000); // 模拟操作
+                // 获取群成员列表
+                var groupId = ConfigService.Instance.Config?.GroupId;
+                if (string.IsNullOrEmpty(groupId))
+                {
+                    MessageBox.Show("请先配置群号！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-                MessageBox.Show("批量修改名片功能开发中...\n\n需要配合旺商聊的群名片修改API实现。", 
+                // 尝试通过副框架修改
+                if (frameworkClient.IsConnected)
+                {
+                    // 发送批量改名命令到副框架
+                    // 副框架会处理获取成员列表和批量修改
+                    var batchCmd = $"#批量改名#{groupId}";
+                    var sendResult = await frameworkClient.SendGroupMessageAsync(groupId, batchCmd);
+                    
+                    if (sendResult)
+                    {
+                        MessageBox.Show("批量修改名片命令已发送到副框架。\n" +
+                            "请在副框架日志中查看处理结果。", 
+                            "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+                }
+                
+                // 直接通过CDP (功能受限)
+                MessageBox.Show("批量修改名片需要通过副框架实现。\n\n" +
+                    "请确保:\n" +
+                    "1. 副框架(WSLFramework)已启动\n" +
+                    "2. 主框架已连接到副框架\n" +
+                    "3. 副框架已连接到旺商聊", 
                     "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"操作失败：{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Logger.Error($"[批量修改名片] {ex}");
             }
             finally
             {

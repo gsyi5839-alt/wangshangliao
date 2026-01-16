@@ -4,8 +4,8 @@ using WangShangLiaoBot.Utils;
 namespace WangShangLiaoBot.Models
 {
     /// <summary>
-    /// 运行日志条目
-    /// Enhanced with competitor bot message format analysis
+    /// 运行日志条目 - 记录我方机器人运行日志
+    /// 使用消息分类系统记录所有操作（开奖、封盘、下注等）
     /// </summary>
     public class RunLogEntry
     {
@@ -33,14 +33,14 @@ namespace WangShangLiaoBot.Models
         /// <summary>发送者昵称</summary>
         public string SenderName { get; set; }
         
-        // Enhanced fields for bot detection (based on competitor analysis)
+        // 增强字段（用于消息分类和特征识别）
         /// <summary>是否为机器人账号</summary>
         public bool IsBot { get; set; }
         
         /// <summary>消息特征标签</summary>
         public string Tags { get; set; }
         
-        /// <summary>竞品消息类型 (competitor bot format)</summary>
+        /// <summary>消息类型分类（开奖/下注/封盘等）</summary>
         public CompetitorMessageType CompetitorType { get; set; }
         
         /// <summary>格式化时间显示</summary>
@@ -49,7 +49,7 @@ namespace WangShangLiaoBot.Models
         /// <summary>格式化类型显示</summary>
         public string TypeDisplay => GetTypeDisplay();
         
-        /// <summary>竞品类型显示</summary>
+        /// <summary>消息类型显示</summary>
         public string CompetitorTypeDisplay => GetCompetitorTypeDisplay();
         
         private string GetTypeDisplay()
@@ -58,16 +58,16 @@ namespace WangShangLiaoBot.Models
             {
                 case RunLogType.SendSuccess: return "投递成功";
                 case RunLogType.SendFailed: return "投递失败";
-                case RunLogType.ReceiveGroup: return "投递成功";
-                case RunLogType.ReceiveFriend: return "好友";
+                case RunLogType.ReceiveGroup: return "群消息";
+                case RunLogType.ReceiveFriend: return "好友消息";
                 case RunLogType.Plugin: return "插件";
                 case RunLogType.System: return "系统";
-                case RunLogType.Hook: return "插件";
+                case RunLogType.Hook: return "Hook";
                 case RunLogType.Seal: return "封盘";
                 case RunLogType.Unseal: return "开盘";
                 case RunLogType.Lottery: return "开奖";
                 case RunLogType.BetConfirm: return "下注确认";
-                default: return "插件";
+                default: return "未知";
             }
         }
         
@@ -90,8 +90,7 @@ namespace WangShangLiaoBot.Models
     }
     
     /// <summary>
-    /// 日志类型枚举
-    /// Enhanced with competitor bot event types
+    /// 日志类型枚举 - 我方机器人运行日志类型
     /// </summary>
     public enum RunLogType
     {

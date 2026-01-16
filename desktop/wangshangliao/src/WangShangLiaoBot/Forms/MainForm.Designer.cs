@@ -28,6 +28,7 @@ namespace WangShangLiaoBot.Forms
             this.menuRunLog = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAccountList = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSystemSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuYxProxy = new System.Windows.Forms.ToolStripMenuItem();
             
             // ===== Top Toolbar =====
             this.panelTopBar = new System.Windows.Forms.Panel();
@@ -123,6 +124,7 @@ namespace WangShangLiaoBot.Forms
                 this.menuRebateTools, this.menuRunLog, this.menuAccountList, 
                 this.menuSystemSettings, this.menuTestConnection, this.menuAbout
             });
+            // YX代理菜单已移除 - 不再需要，已改用NIM SDK直连
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Size = new System.Drawing.Size(680, 25);
             this.menuStrip.BackColor = System.Drawing.SystemColors.Control;
@@ -144,6 +146,8 @@ namespace WangShangLiaoBot.Forms
             this.menuAccountList.Click += new System.EventHandler(this.menuAccountList_Click);
             this.menuSystemSettings.Text = "系统设置";
             this.menuSystemSettings.Click += new System.EventHandler(this.menuSystemSettings_Click);
+            this.menuYxProxy.Text = "YX代理";
+            this.menuYxProxy.Click += new System.EventHandler(this.menuYxProxy_Click);
             
             // ===== Top Toolbar Configuration =====
             this.panelTopBar.BackColor = System.Drawing.SystemColors.Control;
@@ -184,7 +188,7 @@ namespace WangShangLiaoBot.Forms
             this.panelLeft.BackColor = System.Drawing.SystemColors.Control;
             this.panelLeft.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelLeft.Location = new System.Drawing.Point(5, 56);
-            this.panelLeft.Size = new System.Drawing.Size(135, 148);
+            this.panelLeft.Size = new System.Drawing.Size(150, 148);
             this.panelLeft.Controls.Add(this.lblCurrentPeriod);
             this.panelLeft.Controls.Add(this.lblPeriodNumber);
             this.panelLeft.Controls.Add(this.lblCountdownTitle);
@@ -260,13 +264,13 @@ namespace WangShangLiaoBot.Forms
             this.lblEquals.Location = new System.Drawing.Point(96, 50);
             this.lblEquals.AutoSize = true;
             
-            this.lblResultSum.Text = "5";
+            this.lblResultSum.Text = "14";
             this.lblResultSum.ForeColor = System.Drawing.Color.Blue;
-            this.lblResultSum.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold);
+            this.lblResultSum.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold);
             this.lblResultSum.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblResultSum.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblResultSum.Location = new System.Drawing.Point(108, 45);
-            this.lblResultSum.Size = new System.Drawing.Size(22, 25);
+            this.lblResultSum.Size = new System.Drawing.Size(36, 25);
             
             // Next period
             this.lblNextPeriod.Text = "下期";
@@ -297,7 +301,7 @@ namespace WangShangLiaoBot.Forms
             
             // ===== Middle Panel - Buttons Configuration =====
             this.panelMiddle.BackColor = System.Drawing.SystemColors.Control;
-            this.panelMiddle.Location = new System.Drawing.Point(145, 56);
+            this.panelMiddle.Location = new System.Drawing.Point(195, 56);
             this.panelMiddle.Size = new System.Drawing.Size(360, 120);
             this.panelMiddle.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
             
@@ -366,10 +370,11 @@ namespace WangShangLiaoBot.Forms
             this.btnExportBill.Size = new System.Drawing.Size(65, 23);
             this.btnExportBill.Click += new System.EventHandler(this.btnExportBill_Click);
             
-            this.btnStopCalc.Text = "停止算账";
+            this.btnStopCalc.Text = "开始算账";
             this.btnStopCalc.Location = new System.Drawing.Point(204, 55);
             this.btnStopCalc.Size = new System.Drawing.Size(65, 23);
-            this.btnStopCalc.BackColor = System.Drawing.Color.Yellow;
+            this.btnStopCalc.BackColor = System.Drawing.Color.LightGreen;
+            this.btnStopCalc.Click += new System.EventHandler(this.btnStopCalc_Click);
             
             // Row 4
             this.btnDetailProfit.Text = "详细盈利";
@@ -404,7 +409,7 @@ namespace WangShangLiaoBot.Forms
             
             // ===== Right Panel - Checkboxes Configuration =====
             this.panelRight.BackColor = System.Drawing.SystemColors.Control;
-            this.panelRight.Location = new System.Drawing.Point(510, 56);
+            this.panelRight.Location = new System.Drawing.Point(560, 56);
             this.panelRight.Size = new System.Drawing.Size(165, 120);
             this.panelRight.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             this.panelRight.Controls.Add(this.chkMuteGroup);
@@ -672,6 +677,7 @@ namespace WangShangLiaoBot.Forms
         private System.Windows.Forms.ToolStripMenuItem menuRunLog;
         private System.Windows.Forms.ToolStripMenuItem menuAccountList;
         private System.Windows.Forms.ToolStripMenuItem menuSystemSettings;
+        private System.Windows.Forms.ToolStripMenuItem menuYxProxy;
         
         // Top toolbar
         private System.Windows.Forms.Panel panelTopBar;

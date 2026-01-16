@@ -66,6 +66,8 @@ namespace WangShangLiaoBot.Controls.AutoReply
             this.txtForbid09 = new System.Windows.Forms.TextBox();
             
             // 进群/群规
+            this.lblGroupRulesKeyword = new System.Windows.Forms.Label();
+            this.txtGroupRulesKeyword = new System.Windows.Forms.TextBox();
             this.lblGroupRules = new System.Windows.Forms.Label();
             this.txtGroupRules = new System.Windows.Forms.TextBox();
             
@@ -144,7 +146,7 @@ namespace WangShangLiaoBot.Controls.AutoReply
 
             this.tblLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tblLeft.ColumnCount = 2;
-            this.tblLeft.RowCount = 11;
+            this.tblLeft.RowCount = 12;
             this.tblLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.tblLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F)); // 下注显示
@@ -157,6 +159,7 @@ namespace WangShangLiaoBot.Controls.AutoReply
             this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F)); // 已封盘未处理
             this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F)); // 取消托管成功
             this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F)); // 禁止点09
+            this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F)); // 群规关键词
             this.tblLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));  // 进群/群规
 
             ConfigureLabel(this.lblBetDisplay, "下注显示");
@@ -214,13 +217,19 @@ namespace WangShangLiaoBot.Controls.AutoReply
             this.tblLeft.Controls.Add(this.lblForbid09, 0, 9);
             this.tblLeft.Controls.Add(this.txtForbid09, 1, 9);
 
+            ConfigureLabel(this.lblGroupRulesKeyword, "群规关键词");
+            ConfigureTextBox(this.txtGroupRulesKeyword);
+            this.txtGroupRulesKeyword.Text = "群规|规则|新人|福利|玩法";
+            this.tblLeft.Controls.Add(this.lblGroupRulesKeyword, 0, 10);
+            this.tblLeft.Controls.Add(this.txtGroupRulesKeyword, 1, 10);
+
             ConfigureLabel(this.lblGroupRules, "进群\r\n群规");
             this.lblGroupRules.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.txtGroupRules.Multiline = true;
             this.txtGroupRules.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtGroupRules.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tblLeft.Controls.Add(this.lblGroupRules, 0, 10);
-            this.tblLeft.Controls.Add(this.txtGroupRules, 1, 10);
+            this.tblLeft.Controls.Add(this.lblGroupRules, 0, 11);
+            this.tblLeft.Controls.Add(this.txtGroupRules, 1, 11);
 
             // ==========================================
             // Right panel (groups stacked)
@@ -384,6 +393,8 @@ namespace WangShangLiaoBot.Controls.AutoReply
         private System.Windows.Forms.TextBox txtCancelTrustee;
         private System.Windows.Forms.Label lblForbid09;
         private System.Windows.Forms.TextBox txtForbid09;
+        private System.Windows.Forms.Label lblGroupRulesKeyword;
+        private System.Windows.Forms.TextBox txtGroupRulesKeyword;
         private System.Windows.Forms.Label lblGroupRules;
         private System.Windows.Forms.TextBox txtGroupRules;
         

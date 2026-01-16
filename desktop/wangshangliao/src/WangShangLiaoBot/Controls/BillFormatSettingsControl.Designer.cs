@@ -36,7 +36,7 @@ namespace WangShangLiaoBot.Controls
             
             // grpBillFormat - 蓝色边框分组
             this.grpBillFormat.Location = new System.Drawing.Point(0, 0);
-            this.grpBillFormat.Size = new System.Drawing.Size(330, 215);
+            this.grpBillFormat.Size = new System.Drawing.Size(450, 215);
             this.grpBillFormat.ForeColor = System.Drawing.Color.Blue;
             this.grpBillFormat.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             this.grpBillFormat.Controls.Add(this.lblBillContent);
@@ -95,49 +95,49 @@ namespace WangShangLiaoBot.Controls
             // txtBillFormat1
             this.txtBillFormat1.Text = "開: [一区] + [二区] + [三区] = [开奖号码][大小单双][杀顺对子][龙虎狗]";
             this.txtBillFormat1.Location = new System.Drawing.Point(8, 18);
-            this.txtBillFormat1.Size = new System.Drawing.Size(315, 21);
+            this.txtBillFormat1.Size = new System.Drawing.Size(435, 21);
             this.txtBillFormat1.ForeColor = System.Drawing.Color.Black;
             this.txtBillFormat1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             
             // txtBillFormat2
             this.txtBillFormat2.Text = "人数: [客户人数]  继分: [总分数]";
             this.txtBillFormat2.Location = new System.Drawing.Point(8, 42);
-            this.txtBillFormat2.Size = new System.Drawing.Size(315, 21);
+            this.txtBillFormat2.Size = new System.Drawing.Size(435, 21);
             this.txtBillFormat2.ForeColor = System.Drawing.Color.Black;
             this.txtBillFormat2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             
             // txtBillTemplate
             this.txtBillTemplate.Text = "[账单]";
             this.txtBillTemplate.Location = new System.Drawing.Point(8, 66);
-            this.txtBillTemplate.Size = new System.Drawing.Size(315, 21);
+            this.txtBillTemplate.Size = new System.Drawing.Size(435, 21);
             this.txtBillTemplate.ForeColor = System.Drawing.Color.Black;
             this.txtBillTemplate.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             
             // txtHistory1
             this.txtHistory1.Text = "1s: [开奖历史]";
             this.txtHistory1.Location = new System.Drawing.Point(8, 90);
-            this.txtHistory1.Size = new System.Drawing.Size(315, 21);
+            this.txtHistory1.Size = new System.Drawing.Size(435, 21);
             this.txtHistory1.ForeColor = System.Drawing.Color.Black;
             this.txtHistory1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             
             // txtHistory2
             this.txtHistory2.Text = "龙虎狗1s: [龙虎历史]";
             this.txtHistory2.Location = new System.Drawing.Point(8, 114);
-            this.txtHistory2.Size = new System.Drawing.Size(315, 21);
+            this.txtHistory2.Size = new System.Drawing.Size(435, 21);
             this.txtHistory2.ForeColor = System.Drawing.Color.Black;
             this.txtHistory2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             
             // txtHistory3
             this.txtHistory3.Text = "提1s: [提数历史]";
             this.txtHistory3.Location = new System.Drawing.Point(8, 138);
-            this.txtHistory3.Size = new System.Drawing.Size(315, 21);
+            this.txtHistory3.Size = new System.Drawing.Size(435, 21);
             this.txtHistory3.ForeColor = System.Drawing.Color.Black;
             this.txtHistory3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             
             // txtHistory4
             this.txtHistory4.Text = "杀顺对历史: [杀顺对历史]";
             this.txtHistory4.Location = new System.Drawing.Point(8, 162);
-            this.txtHistory4.Size = new System.Drawing.Size(315, 21);
+            this.txtHistory4.Size = new System.Drawing.Size(435, 21);
             this.txtHistory4.ForeColor = System.Drawing.Color.Black;
             this.txtHistory4.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             
@@ -145,7 +145,7 @@ namespace WangShangLiaoBot.Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.grpBillFormat);
-            this.Size = new System.Drawing.Size(332, 190);
+            this.Size = new System.Drawing.Size(455, 190);
             
             this.grpBillFormat.ResumeLayout(false);
             this.grpBillFormat.PerformLayout();

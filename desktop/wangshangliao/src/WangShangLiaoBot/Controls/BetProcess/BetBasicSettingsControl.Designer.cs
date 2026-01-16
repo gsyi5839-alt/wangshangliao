@@ -16,7 +16,6 @@ namespace WangShangLiaoBot.Controls.BetProcess
         private void InitializeComponent()
         {
             // === Section: 下注设置 ===
-            this.grpBetSettings = new System.Windows.Forms.GroupBox();
             this.chkAllowModifyBet = new System.Windows.Forms.CheckBox();
             this.chkProhibitCancel = new System.Windows.Forms.CheckBox();
             this.chkShowBet = new System.Windows.Forms.CheckBox();
@@ -25,7 +24,7 @@ namespace WangShangLiaoBot.Controls.BetProcess
             this.chkSendSealBeforeProcess = new System.Windows.Forms.CheckBox();
 
             // === Section: 重复下注不带加或改处理 ===
-            this.grpRepeatBet = new System.Windows.Forms.GroupBox();
+            this.pnlRepeatBetGroup = new System.Windows.Forms.Panel();
             this.rdoCalcRepeat = new System.Windows.Forms.RadioButton();
             this.rdoSameNotCalc = new System.Windows.Forms.RadioButton();
             this.rdoLastBet = new System.Windows.Forms.RadioButton();
@@ -49,7 +48,7 @@ namespace WangShangLiaoBot.Controls.BetProcess
             this.txtMaxCombinationMsg = new System.Windows.Forms.TextBox();
 
             // === Section: 群开关 ===
-            this.grpGroupSwitch = new System.Windows.Forms.GroupBox();
+            this.pnlChineseBetGroup = new System.Windows.Forms.Panel();
             this.chkPinyinBetOnly = new System.Windows.Forms.CheckBox();
             this.rdoChineseBetWithPinyin = new System.Windows.Forms.RadioButton();
             this.txtPinyinExample = new System.Windows.Forms.TextBox();
@@ -58,7 +57,6 @@ namespace WangShangLiaoBot.Controls.BetProcess
             this.chkAutoMuteUnmute = new System.Windows.Forms.CheckBox();
 
             // === Section: 好友开关 ===
-            this.grpFriendSwitch = new System.Windows.Forms.GroupBox();
             this.chkEnableFriendChat = new System.Windows.Forms.CheckBox();
             this.chkAutoAgreeFriend = new System.Windows.Forms.CheckBox();
             this.chkOnlyMemberBet = new System.Windows.Forms.CheckBox();
@@ -127,24 +125,32 @@ namespace WangShangLiaoBot.Controls.BetProcess
             lblRepeatBet.Location = new System.Drawing.Point(10, row3Y);
             lblRepeatBet.Size = new System.Drawing.Size(145, 18);
 
+            // Panel to group repeat bet radio buttons
+            this.pnlRepeatBetGroup.Location = new System.Drawing.Point(155, row3Y - 2);
+            this.pnlRepeatBetGroup.Size = new System.Drawing.Size(310, 42);
+
             this.rdoCalcRepeat.Text = "算成加注(不推荐使用)";
-            this.rdoCalcRepeat.Location = new System.Drawing.Point(155, row3Y);
+            this.rdoCalcRepeat.Location = new System.Drawing.Point(0, 0);
             this.rdoCalcRepeat.Size = new System.Drawing.Size(140, 18);
 
             this.rdoSameNotCalc.Text = "同注不算 不同等于加注";
-            this.rdoSameNotCalc.Location = new System.Drawing.Point(300, row3Y);
+            this.rdoSameNotCalc.Location = new System.Drawing.Point(145, 0);
             this.rdoSameNotCalc.Size = new System.Drawing.Size(155, 18);
 
-            int row4Y = 68;
-
             this.rdoLastBet.Text = "算最后一次下注(推荐)";
-            this.rdoLastBet.Location = new System.Drawing.Point(155, row4Y);
+            this.rdoLastBet.Location = new System.Drawing.Point(0, 22);
             this.rdoLastBet.Size = new System.Drawing.Size(145, 18);
             this.rdoLastBet.Checked = true;
 
             this.rdoFirstBet.Text = "算前第一次下注";
-            this.rdoFirstBet.Location = new System.Drawing.Point(300, row4Y);
+            this.rdoFirstBet.Location = new System.Drawing.Point(145, 22);
             this.rdoFirstBet.Size = new System.Drawing.Size(115, 18);
+            
+            // Add radio buttons to panel
+            this.pnlRepeatBetGroup.Controls.Add(this.rdoCalcRepeat);
+            this.pnlRepeatBetGroup.Controls.Add(this.rdoSameNotCalc);
+            this.pnlRepeatBetGroup.Controls.Add(this.rdoLastBet);
+            this.pnlRepeatBetGroup.Controls.Add(this.rdoFirstBet);
 
             // =====================================================
             // Row 5: 模糊匹配
@@ -246,20 +252,29 @@ namespace WangShangLiaoBot.Controls.BetProcess
 
             int row12Y = 263;
 
+            // Panel to group chinese bet radio buttons
+            this.pnlChineseBetGroup.Location = new System.Drawing.Point(10, row12Y);
+            this.pnlChineseBetGroup.Size = new System.Drawing.Size(340, 42);
+
             this.rdoChineseBetWithPinyin.Text = "中文下注有效并且提醒下次拼音下注";
-            this.rdoChineseBetWithPinyin.Location = new System.Drawing.Point(10, row12Y);
+            this.rdoChineseBetWithPinyin.Location = new System.Drawing.Point(0, 0);
             this.rdoChineseBetWithPinyin.Size = new System.Drawing.Size(220, 18);
             this.rdoChineseBetWithPinyin.Checked = true;
 
             this.txtPinyinExample.Text = "请拼音下柱谢谢";
-            this.txtPinyinExample.Location = new System.Drawing.Point(235, row12Y);
+            this.txtPinyinExample.Location = new System.Drawing.Point(225, 0);
             this.txtPinyinExample.Size = new System.Drawing.Size(100, 21);
 
             int row13Y = 283;
 
             this.rdoChineseBetNoPinyin.Text = "中文下注无效并且提醒下次拼音下注";
-            this.rdoChineseBetNoPinyin.Location = new System.Drawing.Point(10, row13Y);
+            this.rdoChineseBetNoPinyin.Location = new System.Drawing.Point(0, 22);
             this.rdoChineseBetNoPinyin.Size = new System.Drawing.Size(220, 18);
+            
+            // Add controls to panel
+            this.pnlChineseBetGroup.Controls.Add(this.rdoChineseBetWithPinyin);
+            this.pnlChineseBetGroup.Controls.Add(this.txtPinyinExample);
+            this.pnlChineseBetGroup.Controls.Add(this.rdoChineseBetNoPinyin);
 
             int row14Y = 303;
 
@@ -367,10 +382,7 @@ namespace WangShangLiaoBot.Controls.BetProcess
             this.Controls.Add(this.chkSendSealBeforeProcess);
 
             this.Controls.Add(lblRepeatBet);
-            this.Controls.Add(this.rdoCalcRepeat);
-            this.Controls.Add(this.rdoSameNotCalc);
-            this.Controls.Add(this.rdoLastBet);
-            this.Controls.Add(this.rdoFirstBet);
+            this.Controls.Add(this.pnlRepeatBetGroup);
 
             this.Controls.Add(this.chkFuzzyMatch);
             this.Controls.Add(this.chkFuzzyMatchSupport);
@@ -390,9 +402,7 @@ namespace WangShangLiaoBot.Controls.BetProcess
 
             this.Controls.Add(lblGroupSwitch);
             this.Controls.Add(this.chkPinyinBetOnly);
-            this.Controls.Add(this.rdoChineseBetWithPinyin);
-            this.Controls.Add(this.txtPinyinExample);
-            this.Controls.Add(this.rdoChineseBetNoPinyin);
+            this.Controls.Add(this.pnlChineseBetGroup);
             this.Controls.Add(this.chkReceiveGroupBet);
             this.Controls.Add(this.chkAutoMuteUnmute);
 
@@ -427,7 +437,6 @@ namespace WangShangLiaoBot.Controls.BetProcess
         }
 
         // Section: 下注设置
-        private System.Windows.Forms.GroupBox grpBetSettings;
         private System.Windows.Forms.CheckBox chkAllowModifyBet;
         private System.Windows.Forms.CheckBox chkProhibitCancel;
         private System.Windows.Forms.CheckBox chkShowBet;
@@ -436,7 +445,7 @@ namespace WangShangLiaoBot.Controls.BetProcess
         private System.Windows.Forms.CheckBox chkSendSealBeforeProcess;
 
         // Section: 重复下注处理
-        private System.Windows.Forms.GroupBox grpRepeatBet;
+        private System.Windows.Forms.Panel pnlRepeatBetGroup;
         private System.Windows.Forms.RadioButton rdoCalcRepeat;
         private System.Windows.Forms.RadioButton rdoSameNotCalc;
         private System.Windows.Forms.RadioButton rdoLastBet;
@@ -460,7 +469,7 @@ namespace WangShangLiaoBot.Controls.BetProcess
         private System.Windows.Forms.TextBox txtMaxCombinationMsg;
 
         // Section: 群开关
-        private System.Windows.Forms.GroupBox grpGroupSwitch;
+        private System.Windows.Forms.Panel pnlChineseBetGroup;
         private System.Windows.Forms.CheckBox chkPinyinBetOnly;
         private System.Windows.Forms.RadioButton rdoChineseBetWithPinyin;
         private System.Windows.Forms.TextBox txtPinyinExample;
@@ -469,7 +478,6 @@ namespace WangShangLiaoBot.Controls.BetProcess
         private System.Windows.Forms.CheckBox chkAutoMuteUnmute;
 
         // Section: 好友开关
-        private System.Windows.Forms.GroupBox grpFriendSwitch;
         private System.Windows.Forms.CheckBox chkEnableFriendChat;
         private System.Windows.Forms.CheckBox chkAutoAgreeFriend;
         private System.Windows.Forms.CheckBox chkOnlyMemberBet;

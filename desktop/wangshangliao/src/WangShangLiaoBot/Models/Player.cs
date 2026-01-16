@@ -24,6 +24,12 @@ namespace WangShangLiaoBot.Models
         public DateTime LastActiveTime { get; set; }
         /// <summary>备注</summary>
         public string Remark { get; set; }
+        /// <summary>下注次数（用于下分最少次数检查）</summary>
+        public int BetCount { get; set; }
+        /// <summary>今日下注次数</summary>
+        public int TodayBetCount { get; set; }
+        /// <summary>上次下注日期</summary>
+        public DateTime LastBetDate { get; set; }
     }
     
     /// <summary>
